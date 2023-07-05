@@ -20,12 +20,14 @@ So, for example, if you'd like to generate data for onset and melody,run
 '''
 
 
-import mir_eval
 import glob
 import json
-import numpy as np
 import os
 import sys
+
+import numpy as np
+
+import mir_eval
 
 
 def load_separation_data(folder):

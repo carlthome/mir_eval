@@ -44,11 +44,12 @@ Metrics
 
 '''
 
-import numpy as np
 import collections
-from . import util
 import warnings
 
+import numpy as np
+
+from . import util
 
 # The maximum allowable beat time
 MAX_TIME = 30000.

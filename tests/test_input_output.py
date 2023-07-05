@@ -1,10 +1,12 @@
 """ Unit tests for input/output functions """
 
-import numpy as np
-import mir_eval
-import warnings
-import nose.tools
 import tempfile
+import warnings
+
+import nose.tools
+import numpy as np
+
+import mir_eval
 
 
 def test_load_delimited():

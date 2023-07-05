@@ -63,10 +63,12 @@ Metrics
 
 '''
 
-import numpy as np
-import scipy.interpolate
 import collections
 import warnings
+
+import numpy as np
+import scipy.interpolate
+
 from . import util
 
 

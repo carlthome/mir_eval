@@ -1,11 +1,13 @@
 # CREATED: 2/9/16 2:27 PM by Justin Salamon <justin.salamon@nyu.edu>
 
-import mir_eval
-import numpy as np
 import glob
 import json
-from nose.tools import raises
 import warnings
+
+import numpy as np
+from nose.tools import raises
+
+import mir_eval
 
 A_TOL = 1e-12
 

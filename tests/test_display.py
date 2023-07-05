@@ -9,21 +9,16 @@ matplotlib.use('Agg')  # nopep8
 
 import matplotlib.pyplot as plt
 import numpy as np
-
 import pytest
-
-from nose.tools import raises
-
 # We'll make a decorator to handle style contexts
 from decorator import decorator
+from nose.tools import raises
 
 import mir_eval
 import mir_eval.display
-from mir_eval.io import load_labeled_intervals
-from mir_eval.io import load_valued_intervals
-from mir_eval.io import load_labeled_events
-from mir_eval.io import load_ragged_time_series
-from mir_eval.io import load_wav
+from mir_eval.io import (load_labeled_events, load_labeled_intervals,
+                         load_ragged_time_series, load_valued_intervals,
+                         load_wav)
 
 
 @decorator

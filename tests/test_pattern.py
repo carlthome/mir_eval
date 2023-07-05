@@ -2,12 +2,14 @@
 Some unit tests for the pattern discovery task.
 """
 
-import numpy as np
-import json
-import mir_eval
 import glob
+import json
 import warnings
+
 import nose.tools
+import numpy as np
+
+import mir_eval
 
 A_TOL = 1e-12
 

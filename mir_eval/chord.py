@@ -95,11 +95,11 @@ References
         London, August 2010.
 '''
 
-import numpy as np
-import warnings
 import collections
-
 import re
+import warnings
+
+import numpy as np
 
 from mir_eval import util
 

@@ -4,16 +4,14 @@
 from collections import defaultdict
 
 import numpy as np
+from matplotlib.collections import BrokenBarHCollection
+from matplotlib.colors import ColorConverter, LinearSegmentedColormap, LogNorm
+from matplotlib.patches import Rectangle
+from matplotlib.ticker import Formatter, FuncFormatter, MultipleLocator
 from scipy.signal import spectrogram
 
-from matplotlib.patches import Rectangle
-from matplotlib.ticker import FuncFormatter, MultipleLocator
-from matplotlib.ticker import Formatter
-from matplotlib.colors import LinearSegmentedColormap, LogNorm, ColorConverter
-from matplotlib.collections import BrokenBarHCollection
-
 from .melody import freq_to_voicing
-from .util import midi_to_hz, hz_to_midi
+from .util import hz_to_midi, midi_to_hz
 
 
 def __expand_limits(ax, limits, which='x'):

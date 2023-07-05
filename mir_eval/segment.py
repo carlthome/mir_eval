@@ -76,10 +76,10 @@ import collections
 import warnings
 
 import numpy as np
-import scipy.stats
-import scipy.sparse
 import scipy.misc
+import scipy.sparse
 import scipy.special
+import scipy.stats
 
 from . import util
 

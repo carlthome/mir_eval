@@ -6,13 +6,15 @@ the output from BSS_eval MATLAB implementation, make sure the results
 from mir_eval numerically match.
 '''
 
-import numpy as np
-import mir_eval
 import glob
-import nose.tools
 import json
 import os
 import warnings
+
+import nose.tools
+import numpy as np
+
+import mir_eval
 
 A_TOL = 1e-2
 

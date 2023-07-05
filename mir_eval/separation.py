@@ -45,15 +45,16 @@ References
 
 '''
 
+import collections
+import itertools
+import warnings
+
 import numpy as np
 import scipy.fftpack
 from scipy.linalg import toeplitz
 from scipy.signal import fftconvolve
-import collections
-import itertools
-import warnings
-from . import util
 
+from . import util
 
 # The maximum allowable number of sources (prevents insane computational load)
 MAX_SOURCES = 100

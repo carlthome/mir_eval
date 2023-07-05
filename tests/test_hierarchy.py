@@ -2,18 +2,16 @@
 Unit tests for mir_eval.hierarchy
 '''
 
-from glob import glob
-import re
-
-import warnings
 import json
+import re
+import warnings
+from glob import glob
 
 import numpy as np
 import scipy.sparse
-import mir_eval
-
 from nose.tools import raises
 
+import mir_eval
 
 A_TOL = 1e-12
 

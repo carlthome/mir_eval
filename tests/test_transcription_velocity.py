@@ -1,8 +1,10 @@
-import mir_eval
-import numpy as np
 import glob
 import json
+
+import numpy as np
 from nose.tools import raises
+
+import mir_eval
 
 A_TOL = 1e-12
 

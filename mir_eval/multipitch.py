@@ -42,12 +42,13 @@ References
    Multiple-F0 Estimation and Tracking Systems. In ISMIR (pp. 315-320).
 '''
 
-import numpy as np
 import collections
-import scipy.interpolate
-from . import util
 import warnings
 
+import numpy as np
+import scipy.interpolate
+
+from . import util
 
 MAX_TIME = 30000.  # The maximum allowable time stamp (seconds)
 MAX_FREQ = 5000.  # The maximum allowable frequency (Hz)

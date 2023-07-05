@@ -2,12 +2,14 @@
 Unit tests for mir_eval.chord
 """
 
-import mir_eval
-import numpy as np
-import nose.tools
-import warnings
 import glob
 import json
+import warnings
+
+import nose.tools
+import numpy as np
+
+import mir_eval
 
 A_TOL = 1e-12
 

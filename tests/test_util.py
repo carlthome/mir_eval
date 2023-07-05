@@ -3,8 +3,9 @@
 
 import collections
 
-import numpy as np
 import nose.tools
+import numpy as np
+
 import mir_eval
 from mir_eval import util
 

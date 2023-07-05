@@ -54,9 +54,10 @@ References
 """
 
 import collections
+
 import numpy as np
-from . import transcription
-from . import util
+
+from . import transcription, util
 
 
 def validate(ref_intervals, ref_pitches, ref_velocities, est_intervals,

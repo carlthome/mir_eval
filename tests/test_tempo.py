@@ -2,14 +2,14 @@
 '''
 Unit tests for mir_eval.tempo
 '''
+import glob
+import json
 import warnings
 
 import numpy as np
-import mir_eval
 from nose.tools import raises
-import json
-import glob
 
+import mir_eval
 
 A_TOL = 1e-12
 

@@ -2,11 +2,13 @@
 Tests for mir_eval.key
 '''
 
-import mir_eval
-import nose.tools
 import glob
 import json
+
+import nose.tools
 import numpy as np
+
+import mir_eval
 
 A_TOL = 1e-12
 

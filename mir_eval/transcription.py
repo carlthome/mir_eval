@@ -104,11 +104,12 @@ Metrics
 
 '''
 
-import numpy as np
 import collections
-from . import util
 import warnings
 
+import numpy as np
+
+from . import util
 
 # The number of decimals to keep for onset/offset threshold checks
 N_DECIMALS = 4

@@ -55,10 +55,12 @@ Metrics
 """
 
 
-import numpy as np
-from . import util
-import warnings
 import collections
+import warnings
+
+import numpy as np
+
+from . import util
 
 
 def _n_onset_midi(patterns):

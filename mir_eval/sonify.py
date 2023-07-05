@@ -7,8 +7,7 @@ import numpy as np
 from numpy.lib.stride_tricks import as_strided
 from scipy.interpolate import interp1d
 
-from . import util
-from . import chord
+from . import chord, util
 
 
 def clicks(times, fs, click=None, length=None):

@@ -3,14 +3,13 @@ Functions for loading in annotations from files in different formats.
 """
 
 import contextlib
-import numpy as np
 import re
 import warnings
+
+import numpy as np
 import scipy.io.wavfile
 
-from . import util
-from . import key
-from . import tempo
+from . import key, tempo, util
 
 
 @contextlib.contextmanager

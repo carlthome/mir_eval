@@ -1,8 +1,9 @@
 """ Unit tests for sonification methods """
 
-import mir_eval
 import numpy as np
 import scipy
+
+import mir_eval
 
 
 def test_clicks():

@@ -20,9 +20,11 @@ Metrics
 
 '''
 
-import warnings
-import numpy as np
 import collections
+import warnings
+
+import numpy as np
+
 from . import util
 
 

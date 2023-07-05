@@ -24,9 +24,9 @@ Metrics
 '''
 
 import collections
-from . import util
 import warnings
 
+from . import util
 
 # The maximum allowable beat time
 MAX_TIME = 30000.
