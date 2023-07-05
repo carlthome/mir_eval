@@ -123,11 +123,13 @@ def _align_intervals(int_hier, lab_hier, t_min=0.0, t_max=None):
     labels_hier : list of list of str
         `int_hier` `lab_hier` aligned to span `[t_min, t_max]`.
     """
-    return [list(_) for _ in zip(*[util.adjust_intervals(np.asarray(ival),
-                                                         labels=lab,
-                                                         t_min=t_min,
-                                                         t_max=t_max)
-                                   for ival, lab in zip(int_hier, lab_hier)])]
+    return [
+        list(_) for _ in zip(*[
+            util.adjust_intervals(
+                np.asarray(ival), labels=lab, t_min=t_min, t_max=t_max)
+            for ival, lab in zip(int_hier, lab_hier)
+        ])
+    ]
 
 
 def _lca(intervals_hier, frame_size):
@@ -160,15 +162,15 @@ def _lca(intervals_hier, frame_size):
 
     n_start, n_end = _hierarchy_bounds(intervals_hier)
 
-    n = int((_round(n_end, frame_size) -
-             _round(n_start, frame_size)) / frame_size)
+    n = int(
+        (_round(n_end, frame_size) - _round(n_start, frame_size)) / frame_size)
 
     # Initialize the LCA matrix
     lca_matrix = scipy.sparse.lil_matrix((n, n), dtype=np.uint8)
 
     for level, intervals in enumerate(intervals_hier, 1):
-        for ival in (_round(np.asarray(intervals),
-                            frame_size) / frame_size).astype(int):
+        for ival in (_round(np.asarray(intervals), frame_size) /
+                     frame_size).astype(int):
             idx = slice(ival[0], ival[1])
             lca_matrix[idx, idx] = level
 
@@ -209,14 +211,14 @@ def _meet(intervals_hier, labels_hier, frame_size):
 
     n_start, n_end = _hierarchy_bounds(intervals_hier)
 
-    n = int((_round(n_end, frame_size) -
-             _round(n_start, frame_size)) / frame_size)
+    n = int(
+        (_round(n_end, frame_size) - _round(n_start, frame_size)) / frame_size)
 
     # Initialize the meet matrix
     meet_matrix = scipy.sparse.lil_matrix((n, n), dtype=np.uint8)
 
-    for level, (intervals, labels) in enumerate(zip(intervals_hier,
-                                                    labels_hier), 1):
+    for level, (intervals,
+                labels) in enumerate(zip(intervals_hier, labels_hier), 1):
 
         # Encode the labels at this level
         lab_enc = util.index_labels(labels)[0]
@@ -311,10 +313,11 @@ def _gauc(ref_lca, est_lca, transitive, window):
         # (this also holds when the slice goes off the end of the array.)
         idx = min(query, window)
 
-        ref_score = np.concatenate((ref_score[:idx], ref_score[idx+1:]))
-        est_score = np.concatenate((est_score[:idx], est_score[idx+1:]))
+        ref_score = np.concatenate((ref_score[:idx], ref_score[idx + 1:]))
+        est_score = np.concatenate((est_score[:idx], est_score[idx + 1:]))
 
-        inversions, normalizer = _compare_frame_rankings(ref_score, est_score,
+        inversions, normalizer = _compare_frame_rankings(ref_score,
+                                                         est_score,
                                                          transitive=transitive)
 
         if normalizer:
@@ -408,8 +411,8 @@ def _compare_frame_rankings(ref, est, transitive=False):
     index = collections.defaultdict(lambda: slice(0))
     ref_map = collections.defaultdict(lambda: 0)
 
-    for level, cnt, start, end in zip(levels, counts,
-                                      positions[:-1], positions[1:]):
+    for level, cnt, start, end in zip(levels, counts, positions[:-1],
+                                      positions[1:]):
         index[level] = slice(start, end)
         ref_map[level] = cnt
 
@@ -418,7 +421,7 @@ def _compare_frame_rankings(ref, est, transitive=False):
     if transitive:
         level_pairs = itertools.combinations(levels, 2)
     else:
-        level_pairs = [(i, i+1) for i in levels]
+        level_pairs = [(i, i + 1) for i in levels]
 
     level_pairs, lcounter = itertools.tee(level_pairs)
 
@@ -460,8 +463,8 @@ def validate_hier_intervals(intervals_hier):
     for level, intervals in enumerate(intervals_hier[1:], 1):
         # Make sure this level is consistent with the root
         label_current = util.generate_labels(intervals)
-        validate_structure(intervals_hier[0], label_top,
-                           intervals, label_current)
+        validate_structure(intervals_hier[0], label_top, intervals,
+                           label_current)
 
         # Make sure all previous boundaries are accounted for
         new_bounds = set(util.intervals_to_boundaries(intervals))
@@ -472,8 +475,12 @@ def validate_hier_intervals(intervals_hier):
         boundaries |= new_bounds
 
 
-def tmeasure(reference_intervals_hier, estimated_intervals_hier,
-             transitive=False, window=15.0, frame_size=0.1, beta=1.0):
+def tmeasure(reference_intervals_hier,
+             estimated_intervals_hier,
+             transitive=False,
+             window=15.0,
+             frame_size=0.1,
+             beta=1.0):
     """Computes the tree measures for hierarchical segment annotations.
 
     Parameters
@@ -553,9 +560,12 @@ def tmeasure(reference_intervals_hier, estimated_intervals_hier,
     return t_precision, t_recall, t_measure
 
 
-def lmeasure(reference_intervals_hier, reference_labels_hier,
-             estimated_intervals_hier, estimated_labels_hier,
-             frame_size=0.1, beta=1.0):
+def lmeasure(reference_intervals_hier,
+             reference_labels_hier,
+             estimated_intervals_hier,
+             estimated_labels_hier,
+             frame_size=0.1,
+             beta=1.0):
     """Computes the tree measures for hierarchical segment annotations.
 
     Parameters
@@ -627,8 +637,8 @@ def lmeasure(reference_intervals_hier, reference_labels_hier,
     return l_precision, l_recall, l_measure
 
 
-def evaluate(ref_intervals_hier, ref_labels_hier,
-             est_intervals_hier, est_labels_hier, **kwargs):
+def evaluate(ref_intervals_hier, ref_labels_hier, est_intervals_hier,
+             est_labels_hier, **kwargs):
     """Compute all hierarchical structure metrics for the given reference and
     estimated annotations.
 
@@ -725,27 +735,22 @@ def evaluate(ref_intervals_hier, ref_labels_hier,
 
     # Force the transitivity setting
     kwargs['transitive'] = False
-    (scores['T-Precision reduced'],
-     scores['T-Recall reduced'],
+    (scores['T-Precision reduced'], scores['T-Recall reduced'],
      scores['T-Measure reduced']) = util.filter_kwargs(tmeasure,
                                                        ref_intervals_hier,
                                                        est_intervals_hier,
                                                        **kwargs)
 
     kwargs['transitive'] = True
-    (scores['T-Precision full'],
-     scores['T-Recall full'],
+    (scores['T-Precision full'], scores['T-Recall full'],
      scores['T-Measure full']) = util.filter_kwargs(tmeasure,
                                                     ref_intervals_hier,
                                                     est_intervals_hier,
                                                     **kwargs)
 
-    (scores['L-Precision'],
-     scores['L-Recall'],
-     scores['L-Measure']) = util.filter_kwargs(lmeasure,
-                                               ref_intervals_hier,
+    (scores['L-Precision'], scores['L-Recall'],
+     scores['L-Measure']) = util.filter_kwargs(lmeasure, ref_intervals_hier,
                                                ref_labels_hier,
                                                est_intervals_hier,
-                                               est_labels_hier,
-                                               **kwargs)
+                                               est_labels_hier, **kwargs)
     return scores

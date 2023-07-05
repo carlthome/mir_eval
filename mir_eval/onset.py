@@ -89,8 +89,8 @@ def f_measure(reference_onsets, estimated_onsets, window=.05):
     # locations
     matching = util.match_events(reference_onsets, estimated_onsets, window)
 
-    precision = float(len(matching))/len(estimated_onsets)
-    recall = float(len(matching))/len(reference_onsets)
+    precision = float(len(matching)) / len(estimated_onsets)
+    recall = float(len(matching)) / len(reference_onsets)
     # Compute F-measure and return all statistics
     return util.f_measure(precision, recall), precision, recall
 
@@ -124,8 +124,7 @@ def evaluate(reference_onsets, estimated_onsets, **kwargs):
     # Compute all metrics
     scores = collections.OrderedDict()
 
-    (scores['F-measure'],
-     scores['Precision'],
+    (scores['F-measure'], scores['Precision'],
      scores['Recall']) = util.filter_kwargs(f_measure, reference_onsets,
                                             estimated_onsets, **kwargs)
 

@@ -96,11 +96,18 @@ def validate(ref_intervals, ref_pitches, ref_velocities, est_intervals,
         raise ValueError('Estimated velocities must be positive.')
 
 
-def match_notes(
-        ref_intervals, ref_pitches, ref_velocities, est_intervals, est_pitches,
-        est_velocities, onset_tolerance=0.05, pitch_tolerance=50.0,
-        offset_ratio=0.2, offset_min_tolerance=0.05, strict=False,
-        velocity_tolerance=0.1):
+def match_notes(ref_intervals,
+                ref_pitches,
+                ref_velocities,
+                est_intervals,
+                est_pitches,
+                est_velocities,
+                onset_tolerance=0.05,
+                pitch_tolerance=50.0,
+                offset_ratio=0.2,
+                offset_min_tolerance=0.05,
+                strict=False,
+                velocity_tolerance=0.1):
     """Match notes, taking note velocity into consideration.
 
     This function first calls :func:`mir_eval.transcription.match_notes` to
@@ -162,16 +169,17 @@ def match_notes(
         note ``j``.
     """
     # Compute note matching as usual using standard transcription function
-    matching = transcription.match_notes(
-        ref_intervals, ref_pitches, est_intervals, est_pitches,
-        onset_tolerance, pitch_tolerance, offset_ratio, offset_min_tolerance,
-        strict)
+    matching = transcription.match_notes(ref_intervals, ref_pitches,
+                                         est_intervals, est_pitches,
+                                         onset_tolerance, pitch_tolerance,
+                                         offset_ratio, offset_min_tolerance,
+                                         strict)
 
     # Rescale reference velocities to the range [0, 1]
     min_velocity, max_velocity = np.min(ref_velocities), np.max(ref_velocities)
     # Make the smallest possible range 1 to avoid divide by zero
     velocity_range = max(1, max_velocity - min_velocity)
-    ref_velocities = (ref_velocities - min_velocity)/float(velocity_range)
+    ref_velocities = (ref_velocities - min_velocity) / float(velocity_range)
 
     # Convert matching list-of-tuples to array for fancy indexing
     matching = np.array(matching)
@@ -184,11 +192,12 @@ def match_notes(
     # Find slope and intercept of line which produces best least-squares fit
     # between matched est and ref velocities
     slope, intercept = np.linalg.lstsq(
-        np.vstack([est_matched_velocities,
-                   np.ones(len(est_matched_velocities))]).T,
+        np.vstack(
+            [est_matched_velocities,
+             np.ones(len(est_matched_velocities))]).T,
         ref_matched_velocities)[0]
     # Re-scale est velocities to match ref
-    est_matched_velocities = slope*est_matched_velocities + intercept
+    est_matched_velocities = slope * est_matched_velocities + intercept
     # Compute the absolute error of (rescaled) estimated velocities vs.
     # normalized reference velocities. Error will be in [0, 1]
     velocity_diff = np.abs(est_matched_velocities - ref_matched_velocities)
@@ -202,11 +211,19 @@ def match_notes(
     return matching
 
 
-def precision_recall_f1_overlap(
-        ref_intervals, ref_pitches, ref_velocities, est_intervals, est_pitches,
-        est_velocities, onset_tolerance=0.05, pitch_tolerance=50.0,
-        offset_ratio=0.2, offset_min_tolerance=0.05, strict=False,
-        velocity_tolerance=0.1, beta=1.0):
+def precision_recall_f1_overlap(ref_intervals,
+                                ref_pitches,
+                                ref_velocities,
+                                est_intervals,
+                                est_pitches,
+                                est_velocities,
+                                onset_tolerance=0.05,
+                                pitch_tolerance=50.0,
+                                offset_ratio=0.2,
+                                offset_min_tolerance=0.05,
+                                strict=False,
+                                velocity_tolerance=0.1,
+                                beta=1.0):
     """Compute the Precision, Recall and F-measure of correct vs incorrectly
     transcribed notes, and the Average Overlap Ratio for correctly transcribed
     notes (see :func:`mir_eval.transcription.average_overlap_ratio`).
@@ -289,13 +306,13 @@ def precision_recall_f1_overlap(
     if len(ref_pitches) == 0 or len(est_pitches) == 0:
         return 0., 0., 0., 0.
 
-    matching = match_notes(
-        ref_intervals, ref_pitches, ref_velocities, est_intervals, est_pitches,
-        est_velocities, onset_tolerance, pitch_tolerance, offset_ratio,
-        offset_min_tolerance, strict, velocity_tolerance)
+    matching = match_notes(ref_intervals, ref_pitches, ref_velocities,
+                           est_intervals, est_pitches, est_velocities,
+                           onset_tolerance, pitch_tolerance, offset_ratio,
+                           offset_min_tolerance, strict, velocity_tolerance)
 
-    precision = float(len(matching))/len(est_pitches)
-    recall = float(len(matching))/len(ref_pitches)
+    precision = float(len(matching)) / len(est_pitches)
+    recall = float(len(matching)) / len(ref_pitches)
     f_measure = util.f_measure(precision, recall, beta=beta)
 
     avg_overlap_ratio = transcription.average_overlap_ratio(
@@ -338,9 +355,7 @@ def evaluate(ref_intervals, ref_pitches, ref_velocities, est_intervals,
     # Precision, recall and f-measure taking note offsets into account
     kwargs.setdefault('offset_ratio', 0.2)
     if kwargs['offset_ratio'] is not None:
-        (scores['Precision'],
-         scores['Recall'],
-         scores['F-measure'],
+        (scores['Precision'], scores['Recall'], scores['F-measure'],
          scores['Average_Overlap_Ratio']) = util.filter_kwargs(
              precision_recall_f1_overlap, ref_intervals, ref_pitches,
              ref_velocities, est_intervals, est_pitches, est_velocities,
@@ -348,8 +363,7 @@ def evaluate(ref_intervals, ref_pitches, ref_velocities, est_intervals,
 
     # Precision, recall and f-measure NOT taking note offsets into account
     kwargs['offset_ratio'] = None
-    (scores['Precision_no_offset'],
-     scores['Recall_no_offset'],
+    (scores['Precision_no_offset'], scores['Recall_no_offset'],
      scores['F-measure_no_offset'],
      scores['Average_Overlap_Ratio_no_offset']) = util.filter_kwargs(
          precision_recall_f1_overlap, ref_intervals, ref_pitches,

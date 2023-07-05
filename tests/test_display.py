@@ -43,7 +43,8 @@ def test_display_segment():
     plt.legend()
 
 
-@pytest.mark.mpl_image_compare(baseline_images=['segment_text'], extensions=['png'])
+@pytest.mark.mpl_image_compare(baseline_images=['segment_text'],
+                               extensions=['png'])
 @styled
 def test_display_segment_text():
     plt.figure()
@@ -55,7 +56,8 @@ def test_display_segment_text():
     mir_eval.display.segments(intervals, labels, text=True)
 
 
-@pytest.mark.mpl_image_compare(baseline_images=['labeled_intervals'], extensions=['png'])
+@pytest.mark.mpl_image_compare(baseline_images=['labeled_intervals'],
+                               extensions=['png'])
 @styled
 def test_display_labeled_intervals():
 
@@ -69,7 +71,7 @@ def test_display_labeled_intervals():
 
 
 @pytest.mark.mpl_image_compare(baseline_images=['labeled_intervals_noextend'],
-                  extensions=['png'])
+                               extensions=['png'])
 @styled
 def test_display_labeled_intervals_noextend():
 
@@ -81,14 +83,15 @@ def test_display_labeled_intervals_noextend():
     # Plot the chords with nothing fancy
     ax = plt.axes()
     ax.set_yticklabels([])
-    mir_eval.display.labeled_intervals(intervals, labels,
+    mir_eval.display.labeled_intervals(intervals,
+                                       labels,
                                        label_set=[],
                                        extend_labels=False,
                                        ax=ax)
 
 
 @pytest.mark.mpl_image_compare(baseline_images=['labeled_intervals_compare'],
-                  extensions=['png'])
+                               extensions=['png'])
 @styled
 def test_display_labeled_intervals_compare():
 
@@ -99,16 +102,20 @@ def test_display_labeled_intervals_compare():
     est_int, est_labels = load_labeled_intervals('data/chord/est01.lab')
 
     # Plot reference and estimates using label set extension
-    mir_eval.display.labeled_intervals(ref_int, ref_labels,
-                                       alpha=0.5, label='Reference')
-    mir_eval.display.labeled_intervals(est_int, est_labels,
-                                       alpha=0.5, label='Estimate')
+    mir_eval.display.labeled_intervals(ref_int,
+                                       ref_labels,
+                                       alpha=0.5,
+                                       label='Reference')
+    mir_eval.display.labeled_intervals(est_int,
+                                       est_labels,
+                                       alpha=0.5,
+                                       label='Estimate')
 
     plt.legend()
 
 
-@pytest.mark.mpl_image_compare(baseline_images=['labeled_intervals_compare_noextend'],
-                  extensions=['png'])
+@pytest.mark.mpl_image_compare(
+    baseline_images=['labeled_intervals_compare_noextend'], extensions=['png'])
 @styled
 def test_display_labeled_intervals_compare_noextend():
 
@@ -119,17 +126,21 @@ def test_display_labeled_intervals_compare_noextend():
     est_int, est_labels = load_labeled_intervals('data/chord/est01.lab')
 
     # Plot reference and estimate, but only use the reference labels
-    mir_eval.display.labeled_intervals(ref_int, ref_labels,
-                                       alpha=0.5, label='Reference')
-    mir_eval.display.labeled_intervals(est_int, est_labels,
+    mir_eval.display.labeled_intervals(ref_int,
+                                       ref_labels,
+                                       alpha=0.5,
+                                       label='Reference')
+    mir_eval.display.labeled_intervals(est_int,
+                                       est_labels,
                                        extend_labels=False,
-                                       alpha=0.5, label='Estimate')
+                                       alpha=0.5,
+                                       label='Estimate')
 
     plt.legend()
 
 
-@pytest.mark.mpl_image_compare(baseline_images=['labeled_intervals_compare_common'],
-                  extensions=['png'])
+@pytest.mark.mpl_image_compare(
+    baseline_images=['labeled_intervals_compare_common'], extensions=['png'])
 @styled
 def test_display_labeled_intervals_compare_common():
 
@@ -142,17 +153,22 @@ def test_display_labeled_intervals_compare_common():
     label_set = list(sorted(set(ref_labels) | set(est_labels)))
 
     # Plot reference and estimate with a common label set
-    mir_eval.display.labeled_intervals(ref_int, ref_labels,
+    mir_eval.display.labeled_intervals(ref_int,
+                                       ref_labels,
                                        label_set=label_set,
-                                       alpha=0.5, label='Reference')
-    mir_eval.display.labeled_intervals(est_int, est_labels,
+                                       alpha=0.5,
+                                       label='Reference')
+    mir_eval.display.labeled_intervals(est_int,
+                                       est_labels,
                                        label_set=label_set,
-                                       alpha=0.5, label='Estimate')
+                                       alpha=0.5,
+                                       label='Estimate')
 
     plt.legend()
 
 
-@pytest.mark.mpl_image_compare(baseline_images=['hierarchy_nolabel'], extensions=['png'])
+@pytest.mark.mpl_image_compare(baseline_images=['hierarchy_nolabel'],
+                               extensions=['png'])
 @styled
 def test_display_hierarchy_nolabel():
 
@@ -163,13 +179,13 @@ def test_display_hierarchy_nolabel():
     int1, lab1 = load_labeled_intervals('data/hierarchy/ref01.lab')
 
     # Plot reference and estimate with a common label set
-    mir_eval.display.hierarchy([int0, int1],
-                               [lab0, lab1])
+    mir_eval.display.hierarchy([int0, int1], [lab0, lab1])
 
     plt.legend()
 
 
-@pytest.mark.mpl_image_compare(baseline_images=['hierarchy_label'], extensions=['png'])
+@pytest.mark.mpl_image_compare(baseline_images=['hierarchy_label'],
+                               extensions=['png'])
 @styled
 def test_display_hierarchy_label():
 
@@ -180,14 +196,14 @@ def test_display_hierarchy_label():
     int1, lab1 = load_labeled_intervals('data/hierarchy/ref01.lab')
 
     # Plot reference and estimate with a common label set
-    mir_eval.display.hierarchy([int0, int1],
-                               [lab0, lab1],
+    mir_eval.display.hierarchy([int0, int1], [lab0, lab1],
                                levels=['Large', 'Small'])
 
     plt.legend()
 
 
-@pytest.mark.mpl_image_compare(baseline_images=['pitch_hz'], extensions=['png'])
+@pytest.mark.mpl_image_compare(baseline_images=['pitch_hz'],
+                               extensions=['png'])
 @styled
 def test_pitch_hz():
     plt.figure()
@@ -196,14 +212,19 @@ def test_pitch_hz():
     est_times, est_freqs = load_labeled_events('data/melody/est00.txt')
 
     # Plot pitches on a Hz scale
-    mir_eval.display.pitch(ref_times, ref_freqs, unvoiced=True,
+    mir_eval.display.pitch(ref_times,
+                           ref_freqs,
+                           unvoiced=True,
                            label='Reference')
-    mir_eval.display.pitch(est_times, est_freqs, unvoiced=True,
+    mir_eval.display.pitch(est_times,
+                           est_freqs,
+                           unvoiced=True,
                            label='Estimate')
     plt.legend()
 
 
-@pytest.mark.mpl_image_compare(baseline_images=['pitch_midi'], extensions=['png'])
+@pytest.mark.mpl_image_compare(baseline_images=['pitch_midi'],
+                               extensions=['png'])
 @styled
 def test_pitch_midi():
     plt.figure()
@@ -215,7 +236,8 @@ def test_pitch_midi():
     mir_eval.display.ticker_notes()
 
 
-@pytest.mark.mpl_image_compare(baseline_images=['pitch_midi_hz'], extensions=['png'])
+@pytest.mark.mpl_image_compare(baseline_images=['pitch_midi_hz'],
+                               extensions=['png'])
 @styled
 def test_pitch_midi_hz():
     plt.figure()
@@ -228,7 +250,7 @@ def test_pitch_midi_hz():
 
 
 @pytest.mark.mpl_image_compare(baseline_images=['multipitch_hz_unvoiced'],
-                  extensions=['png'])
+                               extensions=['png'])
 @styled
 def test_multipitch_hz_unvoiced():
     plt.figure()
@@ -239,7 +261,8 @@ def test_multipitch_hz_unvoiced():
     mir_eval.display.multipitch(times, pitches, midi=False, unvoiced=True)
 
 
-@pytest.mark.mpl_image_compare(baseline_images=['multipitch_hz_voiced'], extensions=['png'])
+@pytest.mark.mpl_image_compare(baseline_images=['multipitch_hz_voiced'],
+                               extensions=['png'])
 @styled
 def test_multipitch_hz_voiced():
     plt.figure()
@@ -249,7 +272,8 @@ def test_multipitch_hz_voiced():
     mir_eval.display.multipitch(times, pitches, midi=False, unvoiced=False)
 
 
-@pytest.mark.mpl_image_compare(baseline_images=['multipitch_midi'], extensions=['png'])
+@pytest.mark.mpl_image_compare(baseline_images=['multipitch_midi'],
+                               extensions=['png'])
 @styled
 def test_multipitch_midi():
     plt.figure()
@@ -258,15 +282,22 @@ def test_multipitch_midi():
     est_t, est_p = load_ragged_time_series('data/multipitch/est01.txt')
 
     # Plot pitches on a midi scale with note tickers
-    mir_eval.display.multipitch(ref_t, ref_p, midi=True,
-                                alpha=0.5, label='Reference')
-    mir_eval.display.multipitch(est_t, est_p, midi=True,
-                                alpha=0.5, label='Estimate')
+    mir_eval.display.multipitch(ref_t,
+                                ref_p,
+                                midi=True,
+                                alpha=0.5,
+                                label='Reference')
+    mir_eval.display.multipitch(est_t,
+                                est_p,
+                                midi=True,
+                                alpha=0.5,
+                                label='Estimate')
 
     plt.legend()
 
 
-@pytest.mark.mpl_image_compare(baseline_images=['piano_roll'], extensions=['png'])
+@pytest.mark.mpl_image_compare(baseline_images=['piano_roll'],
+                               extensions=['png'])
 @styled
 def test_pianoroll():
     plt.figure()
@@ -274,15 +305,18 @@ def test_pianoroll():
     ref_t, ref_p = load_valued_intervals('data/transcription/ref04.txt')
     est_t, est_p = load_valued_intervals('data/transcription/est04.txt')
 
-    mir_eval.display.piano_roll(ref_t, ref_p,
-                                label='Reference', alpha=0.5)
-    mir_eval.display.piano_roll(est_t, est_p,
-                                label='Estimate', alpha=0.5, facecolor='r')
+    mir_eval.display.piano_roll(ref_t, ref_p, label='Reference', alpha=0.5)
+    mir_eval.display.piano_roll(est_t,
+                                est_p,
+                                label='Estimate',
+                                alpha=0.5,
+                                facecolor='r')
 
     plt.legend()
 
 
-@pytest.mark.mpl_image_compare(baseline_images=['piano_roll_midi'], extensions=['png'])
+@pytest.mark.mpl_image_compare(baseline_images=['piano_roll_midi'],
+                               extensions=['png'])
 @styled
 def test_pianoroll_midi():
     plt.figure()
@@ -292,15 +326,21 @@ def test_pianoroll_midi():
 
     ref_midi = mir_eval.util.hz_to_midi(ref_p)
     est_midi = mir_eval.util.hz_to_midi(est_p)
-    mir_eval.display.piano_roll(ref_t, midi=ref_midi,
-                                label='Reference', alpha=0.5)
-    mir_eval.display.piano_roll(est_t, midi=est_midi,
-                                label='Estimate', alpha=0.5, facecolor='r')
+    mir_eval.display.piano_roll(ref_t,
+                                midi=ref_midi,
+                                label='Reference',
+                                alpha=0.5)
+    mir_eval.display.piano_roll(est_t,
+                                midi=est_midi,
+                                label='Estimate',
+                                alpha=0.5,
+                                facecolor='r')
 
     plt.legend()
 
 
-@pytest.mark.mpl_image_compare(baseline_images=['ticker_midi_zoom'], extensions=['png'])
+@pytest.mark.mpl_image_compare(baseline_images=['ticker_midi_zoom'],
+                               extensions=['png'])
 @styled
 def test_ticker_midi_zoom():
 
@@ -310,7 +350,8 @@ def test_ticker_midi_zoom():
     mir_eval.display.ticker_notes()
 
 
-@pytest.mark.mpl_image_compare(baseline_images=['separation'], extensions=['png'])
+@pytest.mark.mpl_image_compare(baseline_images=['separation'],
+                               extensions=['png'])
 @styled
 def test_separation():
     plt.figure()
@@ -322,7 +363,8 @@ def test_separation():
     mir_eval.display.separation([x0, x1, x2], fs=fs)
 
 
-@pytest.mark.mpl_image_compare(baseline_images=['separation_label'], extensions=['png'])
+@pytest.mark.mpl_image_compare(baseline_images=['separation_label'],
+                               extensions=['png'])
 @styled
 def test_separation_label():
     plt.figure()
@@ -331,7 +373,8 @@ def test_separation_label():
     x1, fs = load_wav('data/separation/ref05/1.wav')
     x2, fs = load_wav('data/separation/ref05/2.wav')
 
-    mir_eval.display.separation([x0, x1, x2], fs=fs,
+    mir_eval.display.separation([x0, x1, x2],
+                                fs=fs,
                                 labels=['Alice', 'Bob', 'Carol'])
 
     plt.legend()
@@ -352,7 +395,8 @@ def test_events():
     plt.legend()
 
 
-@pytest.mark.mpl_image_compare(baseline_images=['labeled_events'], extensions=['png'])
+@pytest.mark.mpl_image_compare(baseline_images=['labeled_events'],
+                               extensions=['png'])
 @styled
 def test_labeled_events():
     plt.figure()

@@ -171,8 +171,11 @@ def validate_structure(reference_intervals, reference_labels,
             raise ValueError('End times do not match')
 
 
-def detection(reference_intervals, estimated_intervals,
-              window=0.5, beta=1.0, trim=False):
+def detection(reference_intervals,
+              estimated_intervals,
+              window=0.5,
+              beta=1.0,
+              trim=False):
     """Boundary detection hit-rate.
 
     A hit is counted whenever an reference boundary is within ``window`` of a
@@ -245,8 +248,7 @@ def detection(reference_intervals, estimated_intervals,
     if len(reference_boundaries) == 0 or len(estimated_boundaries) == 0:
         return 0.0, 0.0, 0.0
 
-    matching = util.match_events(reference_boundaries,
-                                 estimated_boundaries,
+    matching = util.match_events(reference_boundaries, estimated_boundaries,
                                  window)
 
     precision = float(len(matching)) / len(estimated_boundaries)
@@ -317,9 +319,12 @@ def deviation(reference_intervals, estimated_intervals, trim=False):
     return reference_to_estimated, estimated_to_reference
 
 
-def pairwise(reference_intervals, reference_labels,
-             estimated_intervals, estimated_labels,
-             frame_size=0.1, beta=1.0):
+def pairwise(reference_intervals,
+             reference_labels,
+             estimated_intervals,
+             estimated_labels,
+             frame_size=0.1,
+             beta=1.0):
     """Frame-clustering segmentation evaluation by pair-wise agreement.
 
     Examples
@@ -413,9 +418,12 @@ def pairwise(reference_intervals, reference_labels,
     return precision, recall, f_measure
 
 
-def rand_index(reference_intervals, reference_labels,
-               estimated_intervals, estimated_labels,
-               frame_size=0.1, beta=1.0):
+def rand_index(reference_intervals,
+               reference_labels,
+               estimated_intervals,
+               estimated_labels,
+               frame_size=0.1,
+               beta=1.0):
     """(Non-adjusted) Rand index.
 
     Examples
@@ -530,10 +538,10 @@ def _contingency_matrix(reference_indices, estimated_indices):
     n_ref_classes = ref_classes.shape[0]
     n_est_classes = est_classes.shape[0]
     # Using coo_matrix is faster than histogram2d
-    return scipy.sparse.coo_matrix((np.ones(ref_class_idx.shape[0]),
-                                    (ref_class_idx, est_class_idx)),
-                                   shape=(n_ref_classes, n_est_classes),
-                                   dtype=np.int64).toarray()
+    return scipy.sparse.coo_matrix(
+        (np.ones(ref_class_idx.shape[0]), (ref_class_idx, est_class_idx)),
+        shape=(n_ref_classes, n_est_classes),
+        dtype=np.int64).toarray()
 
 
 def _adjusted_rand_index(reference_indices, estimated_indices):
@@ -559,30 +567,32 @@ def _adjusted_rand_index(reference_indices, estimated_indices):
     # Special limit cases: no clustering since the data is not split;
     # or trivial clustering where each document is assigned a unique cluster.
     # These are perfect matches hence return 1.0.
-    if (ref_classes.shape[0] == est_classes.shape[0] == 1 or
-        ref_classes.shape[0] == est_classes.shape[0] == 0 or
-        (ref_classes.shape[0] == est_classes.shape[0] ==
-         len(reference_indices))):
+    if (ref_classes.shape[0] == est_classes.shape[0] == 1
+            or ref_classes.shape[0] == est_classes.shape[0] == 0
+            or (ref_classes.shape[0] == est_classes.shape[0] ==
+                len(reference_indices))):
         return 1.0
 
     contingency = _contingency_matrix(reference_indices, estimated_indices)
 
     # Compute the ARI using the contingency data
-    sum_comb_c = sum(scipy.special.comb(n_c, 2, exact=1) for n_c in
-                     contingency.sum(axis=1))
-    sum_comb_k = sum(scipy.special.comb(n_k, 2, exact=1) for n_k in
-                     contingency.sum(axis=0))
+    sum_comb_c = sum(
+        scipy.special.comb(n_c, 2, exact=1) for n_c in contingency.sum(axis=1))
+    sum_comb_k = sum(
+        scipy.special.comb(n_k, 2, exact=1) for n_k in contingency.sum(axis=0))
 
-    sum_comb = sum((scipy.special.comb(n_ij, 2, exact=1) for n_ij in
-                    contingency.flatten()))
-    prod_comb = (sum_comb_c * sum_comb_k)/float(scipy.special.comb(n_samples,
-                                                                   2))
-    mean_comb = (sum_comb_k + sum_comb_c)/2.
-    return (sum_comb - prod_comb)/(mean_comb - prod_comb)
+    sum_comb = sum((scipy.special.comb(n_ij, 2, exact=1)
+                    for n_ij in contingency.flatten()))
+    prod_comb = (sum_comb_c * sum_comb_k) / float(
+        scipy.special.comb(n_samples, 2))
+    mean_comb = (sum_comb_k + sum_comb_c) / 2.
+    return (sum_comb - prod_comb) / (mean_comb - prod_comb)
 
 
-def ari(reference_intervals, reference_labels,
-        estimated_intervals, estimated_labels,
+def ari(reference_intervals,
+        reference_labels,
+        estimated_intervals,
+        estimated_labels,
         frame_size=0.1):
     """Adjusted Rand Index (ARI) for frame clustering segmentation evaluation.
 
@@ -742,13 +752,14 @@ def _adjusted_mutual_info_score(reference_indices, estimated_indices):
     est_classes = np.unique(estimated_indices)
     # Special limit cases: no clustering since the data is not split.
     # This is a perfect match hence return 1.0.
-    if (ref_classes.shape[0] == est_classes.shape[0] == 1 or
-            ref_classes.shape[0] == est_classes.shape[0] == 0):
+    if (ref_classes.shape[0] == est_classes.shape[0] == 1
+            or ref_classes.shape[0] == est_classes.shape[0] == 0):
         return 1.0
     contingency = _contingency_matrix(reference_indices,
                                       estimated_indices).astype(float)
     # Calculate the MI for the two clusterings
-    mi = _mutual_info_score(reference_indices, estimated_indices,
+    mi = _mutual_info_score(reference_indices,
+                            estimated_indices,
                             contingency=contingency)
     # The following code is based on
     # sklearn.metrics.cluster.expected_mutual_information
@@ -788,9 +799,8 @@ def _adjusted_mutual_info_score(reference_indices, estimated_indices):
             for nij in range(start[i, j], end[i, j]):
                 term2 = log_Nnij[nij] - log_ab_outer[i, j]
                 # Numerators are positive, denominators are negative.
-                gln = (gln_a[i] + gln_b[j] + gln_Na[i] + gln_Nb[j] -
-                       gln_N - gln_nij[nij] -
-                       scipy.special.gammaln(a[i] - nij + 1) -
+                gln = (gln_a[i] + gln_b[j] + gln_Na[i] + gln_Nb[j] - gln_N -
+                       gln_nij[nij] - scipy.special.gammaln(a[i] - nij + 1) -
                        scipy.special.gammaln(b[j] - nij + 1) -
                        scipy.special.gammaln(N - a[i] - b[j] + nij + 1))
                 term3 = np.exp(gln)
@@ -824,14 +834,15 @@ def _normalized_mutual_info_score(reference_indices, estimated_indices):
     est_classes = np.unique(estimated_indices)
     # Special limit cases: no clustering since the data is not split.
     # This is a perfect match hence return 1.0.
-    if (ref_classes.shape[0] == est_classes.shape[0] == 1 or
-            ref_classes.shape[0] == est_classes.shape[0] == 0):
+    if (ref_classes.shape[0] == est_classes.shape[0] == 1
+            or ref_classes.shape[0] == est_classes.shape[0] == 0):
         return 1.0
     contingency = _contingency_matrix(reference_indices,
                                       estimated_indices).astype(float)
     contingency = np.array(contingency, dtype='float')
     # Calculate the MI for the two clusterings
-    mi = _mutual_info_score(reference_indices, estimated_indices,
+    mi = _mutual_info_score(reference_indices,
+                            estimated_indices,
                             contingency=contingency)
     # Calculate the expected value for the mutual information
     # Calculate entropy for each labeling
@@ -840,8 +851,10 @@ def _normalized_mutual_info_score(reference_indices, estimated_indices):
     return nmi
 
 
-def mutual_information(reference_intervals, reference_labels,
-                       estimated_intervals, estimated_labels,
+def mutual_information(reference_intervals,
+                       reference_labels,
+                       estimated_intervals,
+                       estimated_labels,
                        frame_size=0.1):
     """Frame-clustering segmentation: mutual information metrics.
 
@@ -926,8 +939,13 @@ def mutual_information(reference_intervals, reference_labels,
     return mutual_info, adj_mutual_info, norm_mutual_info
 
 
-def nce(reference_intervals, reference_labels, estimated_intervals,
-        estimated_labels, frame_size=0.1, beta=1.0, marginal=False):
+def nce(reference_intervals,
+        reference_labels,
+        estimated_intervals,
+        estimated_labels,
+        frame_size=0.1,
+        beta=1.0,
+        marginal=False):
     """Frame-clustering segmentation: normalized conditional entropy
 
     Computes cross-entropy of cluster assignment, normalized by the
@@ -1063,8 +1081,12 @@ def nce(reference_intervals, reference_labels, estimated_intervals,
     return score_over, score_under, f_measure
 
 
-def vmeasure(reference_intervals, reference_labels, estimated_intervals,
-             estimated_labels, frame_size=0.1, beta=1.0):
+def vmeasure(reference_intervals,
+             reference_labels,
+             estimated_intervals,
+             estimated_labels,
+             frame_size=0.1,
+             beta=1.0):
     """Frame-clustering segmentation: v-measure
 
     Computes cross-entropy of cluster assignment, normalized by the
@@ -1131,9 +1153,12 @@ def vmeasure(reference_intervals, reference_labels, estimated_intervals,
 
     """
 
-    return nce(reference_intervals, reference_labels,
-               estimated_intervals, estimated_labels,
-               frame_size=frame_size, beta=beta,
+    return nce(reference_intervals,
+               reference_labels,
+               estimated_intervals,
+               estimated_labels,
+               frame_size=frame_size,
+               beta=beta,
                marginal=True)
 
 
@@ -1200,13 +1225,10 @@ def evaluate(ref_intervals, ref_labels, est_intervals, est_labels, **kwargs):
         util.filter_kwargs(deviation, ref_intervals, est_intervals, **kwargs)
 
     # Pairwise clustering
-    (scores['Pairwise Precision'],
-     scores['Pairwise Recall'],
-     scores['Pairwise F-measure']) = util.filter_kwargs(pairwise,
-                                                        ref_intervals,
-                                                        ref_labels,
-                                                        est_intervals,
-                                                        est_labels, **kwargs)
+    (scores['Pairwise Precision'], scores['Pairwise Recall'],
+     scores['Pairwise F-measure']) = util.filter_kwargs(
+         pairwise, ref_intervals, ref_labels, est_intervals, est_labels,
+         **kwargs)
 
     # Rand index
     scores['Rand Index'] = util.filter_kwargs(rand_index, ref_intervals,

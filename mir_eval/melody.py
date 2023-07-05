@@ -207,8 +207,11 @@ def constant_hop_timebase(hop, end_time):
     return times
 
 
-def resample_melody_series(times, frequencies, voicing,
-                           times_new, kind='linear'):
+def resample_melody_series(times,
+                           frequencies,
+                           voicing,
+                           times_new,
+                           kind='linear'):
     """Resamples frequency and voicing time series to a new timescale.
     Maintains any zero ("unvoiced") values in frequencies.
 
@@ -244,9 +247,11 @@ def resample_melody_series(times, frequencies, voicing,
     # Warn when the delta between the original times is not constant,
     # unless times[0] == 0. and frequencies[0] == frequencies[1] (see logic at
     # the beginning of to_cent_voicing)
-    if not (np.allclose(np.diff(times), np.diff(times).mean()) or
-            (np.allclose(np.diff(times[1:]), np.diff(times[1:]).mean()) and
-             frequencies[0] == frequencies[1])):
+    if not (np.allclose(np.diff(times),
+                        np.diff(times).mean()) or
+            (np.allclose(np.diff(times[1:]),
+                         np.diff(times[1:]).mean())
+             and frequencies[0] == frequencies[1])):
         warnings.warn(
             "Non-uniform timescale passed to resample_melody_series.  Pitch "
             "will be linearly interpolated, which will result in undesirable "
@@ -269,39 +274,40 @@ def resample_melody_series(times, frequencies, voicing,
             if frequency == 0:
                 frequencies_held[n + 1] = frequencies_held[n]
         # Linearly interpolate frequencies
-        frequencies_resampled = scipy.interpolate.interp1d(times,
-                                                           frequencies_held,
-                                                           kind)(times_new)
+        frequencies_resampled = scipy.interpolate.interp1d(
+            times, frequencies_held, kind)(times_new)
         # Retain zeros
-        frequency_mask = scipy.interpolate.interp1d(times,
-                                                    frequencies,
+        frequency_mask = scipy.interpolate.interp1d(times, frequencies,
                                                     'zero')(times_new)
         frequencies_resampled *= (frequency_mask != 0)
     else:
-        frequencies_resampled = scipy.interpolate.interp1d(times,
-                                                           frequencies,
-                                                           kind)(times_new)
+        frequencies_resampled = scipy.interpolate.interp1d(
+            times, frequencies, kind)(times_new)
 
     # Use nearest-neighbor for voicing if it was used for frequencies
     # if voicing is not binary, use linear interpolation
     is_binary_voicing = np.all(
         np.logical_or(np.equal(voicing, 0), np.equal(voicing, 1)))
     if kind == 'nearest' or (kind == 'linear' and not is_binary_voicing):
-        voicing_resampled = scipy.interpolate.interp1d(times,
-                                                       voicing,
+        voicing_resampled = scipy.interpolate.interp1d(times, voicing,
                                                        kind)(times_new)
     # otherwise, always use zeroth order
     else:
-        voicing_resampled = scipy.interpolate.interp1d(times,
-                                                       voicing,
+        voicing_resampled = scipy.interpolate.interp1d(times, voicing,
                                                        'zero')(times_new)
 
     return frequencies_resampled, voicing_resampled
 
 
-def to_cent_voicing(ref_time, ref_freq, est_time, est_freq,
-                    est_voicing=None, ref_reward=None, base_frequency=10.,
-                    hop=None, kind='linear'):
+def to_cent_voicing(ref_time,
+                    ref_freq,
+                    est_time,
+                    est_freq,
+                    est_voicing=None,
+                    ref_reward=None,
+                    base_frequency=10.,
+                    hop=None,
+                    kind='linear'):
     """Converts reference and estimated time/frequency (Hz) annotations to
     sampled frequency (cent)/voicing arrays.
 
@@ -382,8 +388,9 @@ def to_cent_voicing(ref_time, ref_freq, est_time, est_freq,
             constant_hop_timebase(hop, est_time.max()), kind)
     # Otherwise, only resample estimated to the reference time base
     else:
-        est_cent, est_voicing = resample_melody_series(
-            est_time, est_cent, est_voicing, ref_time, kind)
+        est_cent, est_voicing = resample_melody_series(est_time, est_cent,
+                                                       est_voicing, ref_time,
+                                                       kind)
     # ensure the estimated sequence is the same length as the reference
     len_diff = ref_cent.shape[0] - est_cent.shape[0]
     if len_diff >= 0:
@@ -503,7 +510,10 @@ def voicing_measures(ref_voicing, est_voicing):
     return vx_recall, vx_false_alm
 
 
-def raw_pitch_accuracy(ref_voicing, ref_cent, est_voicing, est_cent,
+def raw_pitch_accuracy(ref_voicing,
+                       ref_cent,
+                       est_voicing,
+                       est_cent,
                        cent_tolerance=50):
     """Compute the raw pitch accuracy given two pitch (frequency) sequences in
     cents and matching voicing indicator sequences. The first pitch and voicing
@@ -565,14 +575,15 @@ def raw_pitch_accuracy(ref_voicing, ref_cent, est_voicing, est_cent,
 
     freq_diff_cents = np.abs(ref_cent - est_cent)[nonzero_freqs]
     correct_frequencies = freq_diff_cents < cent_tolerance
-    rpa = (
-        np.sum(ref_voicing[nonzero_freqs] * correct_frequencies) /
-        np.sum(ref_voicing)
-    )
+    rpa = (np.sum(ref_voicing[nonzero_freqs] * correct_frequencies) /
+           np.sum(ref_voicing))
     return rpa
 
 
-def raw_chroma_accuracy(ref_voicing, ref_cent, est_voicing, est_cent,
+def raw_chroma_accuracy(ref_voicing,
+                        ref_cent,
+                        est_voicing,
+                        est_cent,
                         cent_tolerance=50):
     """Compute the raw chroma accuracy given two pitch (frequency) sequences in
     cents and matching voicing indicator sequences. The first pitch and voicing
@@ -632,14 +643,15 @@ def raw_chroma_accuracy(ref_voicing, ref_cent, est_voicing, est_cent,
     freq_diff_cents = np.abs(ref_cent - est_cent)[nonzero_freqs]
     octave = 1200.0 * np.floor(freq_diff_cents / 1200 + 0.5)
     correct_chroma = np.abs(freq_diff_cents - octave) < cent_tolerance
-    rca = (
-        np.sum(ref_voicing[nonzero_freqs] * correct_chroma) /
-        np.sum(ref_voicing)
-    )
+    rca = (np.sum(ref_voicing[nonzero_freqs] * correct_chroma) /
+           np.sum(ref_voicing))
     return rca
 
 
-def overall_accuracy(ref_voicing, ref_cent, est_voicing, est_cent,
+def overall_accuracy(ref_voicing,
+                     ref_cent,
+                     est_voicing,
+                     est_cent,
                      cent_tolerance=50):
     """Compute the overall accuracy given two pitch (frequency) sequences in
     cents and matching voicing indicator sequences. The first pitch and voicing
@@ -700,19 +712,21 @@ def overall_accuracy(ref_voicing, ref_cent, est_voicing, est_cent,
         ratio = (np.sum(ref_binary) / np.sum(ref_voicing))
 
     accuracy = (
-        (
-            ratio * np.sum(ref_voicing[nonzero_freqs] *
-                           est_voicing[nonzero_freqs] *
-                           correct_frequencies)
-        ) +
-        np.sum((1.0 - ref_binary) * (1.0 - est_voicing))
-    ) / n_frames
+        (ratio * np.sum(ref_voicing[nonzero_freqs] * est_voicing[nonzero_freqs]
+                        * correct_frequencies)) + np.sum(
+                            (1.0 - ref_binary) *
+                            (1.0 - est_voicing))) / n_frames
 
     return accuracy
 
 
-def evaluate(ref_time, ref_freq, est_time, est_freq,
-             est_voicing=None, ref_reward=None, **kwargs):
+def evaluate(ref_time,
+             ref_freq,
+             est_time,
+             est_freq,
+             est_voicing=None,
+             ref_reward=None,
+             **kwargs):
     """Evaluate two melody (predominant f0) transcriptions, where the first is
     treated as the reference (ground truth) and the second as the estimate to
     be evaluated (prediction).
@@ -771,16 +785,15 @@ def evaluate(ref_time, ref_freq, est_time, est_freq,
         Retrieval Conference (ISMIR), 2019.
     """
     # Convert to reference/estimated voicing/frequency (cent) arrays
-    (ref_voicing, ref_cent,
-     est_voicing, est_cent) = util.filter_kwargs(
-         to_cent_voicing, ref_time, ref_freq, est_time, est_freq,
-         est_voicing, ref_reward, **kwargs)
+    (ref_voicing, ref_cent, est_voicing,
+     est_cent) = util.filter_kwargs(to_cent_voicing, ref_time, ref_freq,
+                                    est_time, est_freq, est_voicing,
+                                    ref_reward, **kwargs)
 
     # Compute metrics
     scores = collections.OrderedDict()
 
-    scores['Voicing Recall'] = util.filter_kwargs(voicing_recall,
-                                                  ref_voicing,
+    scores['Voicing Recall'] = util.filter_kwargs(voicing_recall, ref_voicing,
                                                   est_voicing, **kwargs)
 
     scores['Voicing False Alarm'] = util.filter_kwargs(voicing_false_alarm,

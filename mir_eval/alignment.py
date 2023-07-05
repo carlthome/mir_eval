@@ -54,9 +54,8 @@ from scipy.stats import skewnorm
 from mir_eval.util import filter_kwargs
 
 
-def validate(
-    reference_timestamps: np.ndarray, estimated_timestamps: np.ndarray
-):
+def validate(reference_timestamps: np.ndarray,
+             estimated_timestamps: np.ndarray):
     """Checks that the input annotations to a metric look like valid onset time
     arrays, and throws helpful errors if not.
 
@@ -71,23 +70,19 @@ def validate(
     if not isinstance(reference_timestamps, np.ndarray):
         raise ValueError(
             "Reference timestamps need to be a numpy array, but got"
-            f" {type(reference_timestamps)}"
-        )
+            f" {type(reference_timestamps)}")
     if not isinstance(estimated_timestamps, np.ndarray):
         raise ValueError(
             "Estimated timestamps need to be a numpy array, but got"
-            f" {type(estimated_timestamps)}"
-        )
+            f" {type(estimated_timestamps)}")
     if reference_timestamps.ndim != 1:
         raise ValueError(
             "Reference timestamps need to be a one-dimensional vector, but got"
-            f" {reference_timestamps.ndim} dimensions"
-        )
+            f" {reference_timestamps.ndim} dimensions")
     if estimated_timestamps.ndim != 1:
         raise ValueError(
             "Estimated timestamps need to be a one-dimensional vector, but got"
-            f" {estimated_timestamps.ndim} dimensions"
-        )
+            f" {estimated_timestamps.ndim} dimensions")
 
     # If reference or estimated timestamps are empty, cannot compute metric
     if reference_timestamps.size == 0:
@@ -96,18 +91,15 @@ def validate(
         raise ValueError(
             "Number of timestamps must be the same in prediction and ground"
             f" truth, but found {estimated_timestamps.size} in prediction and"
-            f" {reference_timestamps.size} in ground truth"
-        )
+            f" {reference_timestamps.size} in ground truth")
 
     # Check monotonicity
     if not np.all(reference_timestamps[1:] - reference_timestamps[:-1] >= 0):
         raise ValueError(
-            "Reference timestamps are not monotonically increasing!"
-        )
+            "Reference timestamps are not monotonically increasing!")
     if not np.all(estimated_timestamps[1:] - estimated_timestamps[:-1] >= 0):
         raise ValueError(
-            "Estimated timestamps are not monotonically increasing!"
-        )
+            "Estimated timestamps are not monotonically increasing!")
 
     # Check positivity (need for correct PCS metric calculation)
     if not np.all(reference_timestamps >= 0):
@@ -176,9 +168,9 @@ def percentage_correct(reference_timestamps, estimated_timestamps, window=0.3):
     return np.mean(deviations <= window)
 
 
-def percentage_correct_segments(
-    reference_timestamps, estimated_timestamps, duration: Optional[float] = None
-):
+def percentage_correct_segments(reference_timestamps,
+                                estimated_timestamps,
+                                duration: Optional[float] = None):
     """Calculates the percentage of correct segments (PCS) metric.
 
     It constructs segments out of predicted and estimated timestamps separately
@@ -230,20 +222,15 @@ def percentage_correct_segments(
         duration = float(duration)
         if duration <= 0:
             raise ValueError(
-                f"Positive duration needs to be provided, but got {duration}"
-            )
+                f"Positive duration needs to be provided, but got {duration}")
         if np.max(reference_timestamps) > duration:
-            raise ValueError(
-                "Expected largest reference timestamp"
-                f"{np.max(reference_timestamps)} to not be "
-                f"larger than duration {duration}"
-            )
+            raise ValueError("Expected largest reference timestamp"
+                             f"{np.max(reference_timestamps)} to not be "
+                             f"larger than duration {duration}")
         if np.max(estimated_timestamps) > duration:
-            raise ValueError(
-                "Expected largest estimated timestamp "
-                f"{np.max(estimated_timestamps)} to not be "
-                f"larger than duration {duration}"
-            )
+            raise ValueError("Expected largest estimated timestamp "
+                             f"{np.max(estimated_timestamps)} to not be "
+                             f"larger than duration {duration}")
 
         ref_starts = np.concatenate([[0], reference_timestamps])
         ref_ends = np.concatenate([reference_timestamps, [duration]])
@@ -256,8 +243,7 @@ def percentage_correct_segments(
         if duration <= 0:
             raise ValueError(
                 f"Reference timestamps are all identical, can not compute PCS"
-                f" metric!"
-            )
+                f" metric!")
 
         ref_starts = reference_timestamps[:-1]
         ref_ends = reference_timestamps[1:]
@@ -307,8 +293,7 @@ def karaoke_perceptual_metric(reference_timestamps, estimated_timestamps):
     scale = 0.29779424
     normalisation_factor = 1.6857
     perceptual_scores = (1.0 / normalisation_factor) * skewnorm.pdf(
-        offsets, skewness, loc=localisation, scale=scale
-    )
+        offsets, skewness, loc=localisation, scale=scale)
 
     return np.mean(perceptual_scores)
 
@@ -342,20 +327,17 @@ def evaluate(reference_timestamps, estimated_timestamps, **kwargs):
     # Compute all metrics
     scores = collections.OrderedDict()
 
-    scores["pc"] = filter_kwargs(
-        percentage_correct, reference_timestamps, estimated_timestamps, **kwargs
-    )
-    scores["mae"], scores["aae"] = absolute_error(
-        reference_timestamps, estimated_timestamps
-    )
+    scores["pc"] = filter_kwargs(percentage_correct, reference_timestamps,
+                                 estimated_timestamps, **kwargs)
+    scores["mae"], scores["aae"] = absolute_error(reference_timestamps,
+                                                  estimated_timestamps)
     scores["pcs"] = filter_kwargs(
         percentage_correct_segments,
         reference_timestamps,
         estimated_timestamps,
         **kwargs,
     )
-    scores["perceptual"] = karaoke_perceptual_metric(
-        reference_timestamps, estimated_timestamps
-    )
+    scores["perceptual"] = karaoke_perceptual_metric(reference_timestamps,
+                                                     estimated_timestamps)
 
     return scores

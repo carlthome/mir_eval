@@ -104,9 +104,9 @@ from mir_eval import util
 
 BITMAP_LENGTH = 12
 NO_CHORD = "N"
-NO_CHORD_ENCODED = -1, np.array([0]*BITMAP_LENGTH), -1
+NO_CHORD_ENCODED = -1, np.array([0] * BITMAP_LENGTH), -1
 X_CHORD = "X"
-X_CHORD_ENCODED = -1, np.array([-1]*BITMAP_LENGTH), -1
+X_CHORD_ENCODED = -1, np.array([-1] * BITMAP_LENGTH), -1
 
 
 class InvalidChordException(Exception):
@@ -129,8 +129,9 @@ def _pitch_classes():
 
 def _scale_degrees():
     r"""Mapping from scale degrees (str) to semitones (int)."""
-    degrees = ['1', '2', '3',  '4',  '5',  '6', '7',
-               '8', '9', '10', '11', '12', '13']
+    degrees = [
+        '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'
+    ]
     semitones = [0, 2, 4, 5, 7, 9, 11, 12, 14, 16, 17, 19, 21]
     return dict([(d, s) for d, s in zip(degrees, semitones)])
 
@@ -161,8 +162,8 @@ def pitch_class_to_semitone(pitch_class):
         elif idx == 0:
             semitone = PITCH_CLASSES.get(char)
         else:
-            raise InvalidChordException(
-                "Pitch class improperly formed: %s" % pitch_class)
+            raise InvalidChordException("Pitch class improperly formed: %s" %
+                                        pitch_class)
     return semitone % 12
 
 
@@ -199,8 +200,8 @@ def scale_degree_to_semitone(scale_degree):
     semitone = SCALE_DEGREES.get(scale_degree, None)
     if semitone is None:
         raise InvalidChordException(
-            "Scale degree improperly formed: {}, expected one of {}."
-            .format(scale_degree, list(SCALE_DEGREES.keys())))
+            "Scale degree improperly formed: {}, expected one of {}.".format(
+                scale_degree, list(SCALE_DEGREES.keys())))
     return semitone + offset
 
 
@@ -240,35 +241,36 @@ def scale_degree_to_bitmap(scale_degree, modulo=False, length=BITMAP_LENGTH):
 # semitones, i.e. vector[0] is the tonic.
 QUALITIES = {
     #           1     2     3     4  5     6     7
-    'maj':     [1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0],
-    'min':     [1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0],
-    'aug':     [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0],
-    'dim':     [1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0],
-    'sus4':    [1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0],
-    'sus2':    [1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0],
-    '7':       [1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0],
-    'maj7':    [1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1],
-    'min7':    [1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0],
+    'maj': [1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0],
+    'min': [1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0],
+    'aug': [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0],
+    'dim': [1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0],
+    'sus4': [1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0],
+    'sus2': [1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0],
+    '7': [1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0],
+    'maj7': [1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1],
+    'min7': [1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0],
     'minmaj7': [1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1],
-    'maj6':    [1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0],
-    'min6':    [1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0],
-    'dim7':    [1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0],
-    'hdim7':   [1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0],
-    'maj9':    [1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1],
-    'min9':    [1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0],
-    '9':       [1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0],
-    'b9':      [1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0],
-    '#9':      [1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0],
-    'min11':   [1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0],
-    '11':      [1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0],
-    '#11':     [1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0],
-    'maj13':   [1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1],
-    'min13':   [1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0],
-    '13':      [1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0],
-    'b13':     [1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0],
-    '1':       [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    '5':       [1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
-    '':        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}
+    'maj6': [1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0],
+    'min6': [1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0],
+    'dim7': [1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0],
+    'hdim7': [1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0],
+    'maj9': [1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1],
+    'min9': [1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0],
+    '9': [1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0],
+    'b9': [1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0],
+    '#9': [1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0],
+    'min11': [1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0],
+    '11': [1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0],
+    '#11': [1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0],
+    'maj13': [1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1],
+    'min13': [1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0],
+    '13': [1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0],
+    'b13': [1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0],
+    '1': [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    '5': [1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
+    '': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+}
 
 
 def quality_to_bitmap(quality):
@@ -297,18 +299,19 @@ def quality_to_bitmap(quality):
 #   but MMV handles it like a separate quality (rather than an add7).
 EXTENDED_QUALITY_REDUX = {
     'minmaj7': ('min', set(['7'])),
-    'maj9':    ('maj7', set(['9'])),
-    'min9':    ('min7', set(['9'])),
-    '9':       ('7', set(['9'])),
-    'b9':      ('7', set(['b9'])),
-    '#9':      ('7', set(['#9'])),
-    '11':      ('7', set(['9', '11'])),
-    '#11':     ('7', set(['9', '#11'])),
-    '13':      ('7', set(['9', '11', '13'])),
-    'b13':     ('7', set(['9', '11', 'b13'])),
-    'min11':   ('min7', set(['9', '11'])),
-    'maj13':   ('maj7', set(['9', '11', '13'])),
-    'min13':   ('min7', set(['9', '11', '13']))}
+    'maj9': ('maj7', set(['9'])),
+    'min9': ('min7', set(['9'])),
+    '9': ('7', set(['9'])),
+    'b9': ('7', set(['b9'])),
+    '#9': ('7', set(['#9'])),
+    '11': ('7', set(['9', '11'])),
+    '#11': ('7', set(['9', '#11'])),
+    '13': ('7', set(['9', '11', '13'])),
+    'b13': ('7', set(['9', '11', 'b13'])),
+    'min11': ('min7', set(['9', '11'])),
+    'maj13': ('maj7', set(['9', '11', '13'])),
+    'min13': ('min7', set(['9', '11', '13']))
+}
 
 
 def reduce_extended_quality(quality):
@@ -344,7 +347,9 @@ def validate_chord_label(chord_label):
     # which is in turn derived from the context-free grammar of
     # Harte et al., 2005.
 
-    pattern = re.compile(r'''^((N|X)|(([A-G](b*|#*))((:(maj|min|dim|aug|1|5|sus2|sus4|maj6|min6|7|maj7|min7|dim7|hdim7|minmaj7|aug7|9|maj9|min9|11|maj11|min11|13|maj13|min13)(\((\*?((b*|#*)([1-9]|1[0-3]?))(,\*?((b*|#*)([1-9]|1[0-3]?)))*)\))?)|(:\((\*?((b*|#*)([1-9]|1[0-3]?))(,\*?((b*|#*)([1-9]|1[0-3]?)))*)\)))?((/((b*|#*)([1-9]|1[0-3]?)))?)?))$''')  # nopep8
+    pattern = re.compile(
+        r'''^((N|X)|(([A-G](b*|#*))((:(maj|min|dim|aug|1|5|sus2|sus4|maj6|min6|7|maj7|min7|dim7|hdim7|minmaj7|aug7|9|maj9|min9|11|maj11|min11|13|maj13|min13)(\((\*?((b*|#*)([1-9]|1[0-3]?))(,\*?((b*|#*)([1-9]|1[0-3]?)))*)\))?)|(:\((\*?((b*|#*)([1-9]|1[0-3]?))(,\*?((b*|#*)([1-9]|1[0-3]?)))*)\)))?((/((b*|#*)([1-9]|1[0-3]?)))?)?))$'''
+    )  # nopep8
 
     if not pattern.match(chord_label):
         raise InvalidChordException('Invalid chord label: '
@@ -459,7 +464,8 @@ def join(chord_root, quality='', extensions=None, bass=''):
 
 
 # --- Chords to Numerical Representations ---
-def encode(chord_label, reduce_extended_chords=False,
+def encode(chord_label,
+           reduce_extended_chords=False,
            strict_bass_intervals=False):
     """Translate a chord label to numerical representations for evaluation.
 
@@ -619,9 +625,8 @@ def validate(reference_labels, estimated_labels):
     N = len(reference_labels)
     M = len(estimated_labels)
     if N != M:
-        raise ValueError(
-            "Chord comparison received different length lists: "
-            "len(reference)=%d\tlen(estimates)=%d" % (N, M))
+        raise ValueError("Chord comparison received different length lists: "
+                         "len(reference)=%d\tlen(estimates)=%d" % (N, M))
     for labels in [reference_labels, estimated_labels]:
         for chord_label in labels:
             validate_chord_label(chord_label)
@@ -691,9 +696,9 @@ def weighted_accuracy(comparisons, weights):
     weights = weights[valid_idx]
     # Normalize the weights
     total_weight = float(np.sum(weights))
-    normalized_weights = np.asarray(weights, dtype=float)/total_weight
+    normalized_weights = np.asarray(weights, dtype=float) / total_weight
     # Score is the sum of all weighted comparisons
-    return np.sum(comparisons*normalized_weights)
+    return np.sum(comparisons * normalized_weights)
 
 
 def thirds(reference_labels, estimated_labels):
@@ -827,8 +832,8 @@ def triads(reference_labels, estimated_labels):
     est_roots, est_semitones = encode_many(estimated_labels, False)[:2]
 
     eq_roots = ref_roots == est_roots
-    eq_semitones = np.all(
-        np.equal(ref_semitones[:, :8], est_semitones[:, :8]), axis=1)
+    eq_semitones = np.all(np.equal(ref_semitones[:, :8], est_semitones[:, :8]),
+                          axis=1)
     comparison_scores = (eq_roots * eq_semitones).astype(np.float64)
 
     # Ignore 'X' chords
@@ -875,9 +880,10 @@ def triads_inv(reference_labels, estimated_labels):
 
     eq_roots = ref_roots == est_roots
     eq_basses = ref_bass == est_bass
-    eq_semitones = np.all(
-        np.equal(ref_semitones[:, :8], est_semitones[:, :8]), axis=1)
-    comparison_scores = (eq_roots * eq_semitones * eq_basses).astype(np.float64)
+    eq_semitones = np.all(np.equal(ref_semitones[:, :8], est_semitones[:, :8]),
+                          axis=1)
+    comparison_scores = (eq_roots * eq_semitones * eq_basses).astype(
+        np.float64)
 
     # Ignore 'X' chords
     comparison_scores[np.any(ref_semitones < 0, axis=1)] = -1.0
@@ -970,7 +976,8 @@ def tetrads_inv(reference_labels, estimated_labels):
     eq_roots = ref_roots == est_roots
     eq_basses = ref_bass == est_bass
     eq_semitones = np.all(np.equal(ref_semitones, est_semitones), axis=1)
-    comparison_scores = (eq_roots * eq_semitones * eq_basses).astype(np.float64)
+    comparison_scores = (eq_roots * eq_semitones * eq_basses).astype(
+        np.float64)
 
     # Ignore 'X' chords
     comparison_scores[np.any(ref_semitones < 0, axis=1)] = -1.0
@@ -1075,8 +1082,8 @@ def mirex(reference_labels, estimated_labels):
     # Skip chords where the number of active semitones `n` is
     #   0 < n < `min_intersection`.
     ref_semitone_count = (ref_data[1] > 0).sum(axis=1)
-    skip_idx = np.logical_and(ref_semitone_count > 0,
-                              ref_semitone_count < min_intersection)
+    skip_idx = np.logical_and(ref_semitone_count > 0, ref_semitone_count
+                              < min_intersection)
     # Also ignore 'X' chords.
     np.logical_or(skip_idx, np.any(ref_data[1] < 0, axis=1), skip_idx)
     comparison_scores[skip_idx] = -1.0
@@ -1126,8 +1133,8 @@ def majmin(reference_labels, estimated_labels):
     est_roots, est_semitones, _ = encode_many(estimated_labels, False)
 
     eq_root = ref_roots == est_roots
-    eq_quality = np.all(np.equal(ref_semitones[:, :8],
-                                 est_semitones[:, :8]), axis=1)
+    eq_quality = np.all(np.equal(ref_semitones[:, :8], est_semitones[:, :8]),
+                        axis=1)
     comparison_scores = (eq_root * eq_quality).astype(np.float64)
 
     # Test for Major / Minor / No-chord
@@ -1192,8 +1199,8 @@ def majmin_inv(reference_labels, estimated_labels):
     est_roots, est_semitones, est_bass = encode_many(estimated_labels, False)
 
     eq_root_bass = (ref_roots == est_roots) * (ref_bass == est_bass)
-    eq_semitones = np.all(np.equal(ref_semitones[:, :8],
-                                   est_semitones[:, :8]), axis=1)
+    eq_semitones = np.all(np.equal(ref_semitones[:, :8], est_semitones[:, :8]),
+                          axis=1)
     comparison_scores = (eq_root_bass * eq_semitones).astype(np.float64)
 
     # Test for Major / Minor / No-chord
@@ -1259,8 +1266,10 @@ def sevenths(reference_labels, estimated_labels):
     comparison_scores = (eq_root * eq_semitones).astype(np.float64)
 
     # Test for reference chord inclusion
-    is_valid = np.array([np.all(np.equal(ref_semitones, semitones), axis=1)
-                         for semitones in valid_semitones])
+    is_valid = np.array([
+        np.all(np.equal(ref_semitones, semitones), axis=1)
+        for semitones in valid_semitones
+    ])
     # Drop if NOR
     comparison_scores[np.sum(is_valid, axis=0) == 0] = -1
     return comparison_scores
@@ -1313,8 +1322,10 @@ def sevenths_inv(reference_labels, estimated_labels):
     comparison_scores = (eq_roots_basses * eq_semitones).astype(np.float64)
 
     # Test for Major / Minor / No-chord
-    is_valid = np.array([np.all(np.equal(ref_semitones, semitones), axis=1)
-                         for semitones in valid_semitones])
+    is_valid = np.array([
+        np.all(np.equal(ref_semitones, semitones), axis=1)
+        for semitones in valid_semitones
+    ])
     comparison_scores[np.sum(is_valid, axis=0) == 0] = -1
 
     # Disable inversions that are not part of the quality
@@ -1359,8 +1370,8 @@ def directional_hamming_distance(reference_intervals, estimated_intervals):
     util.validate_intervals(reference_intervals)
 
     # make sure chord intervals do not overlap
-    if len(reference_intervals) > 1 and (reference_intervals[:-1, 1] >
-                                         reference_intervals[1:, 0]).any():
+    if len(reference_intervals) > 1 and (reference_intervals[:-1, 1]
+                                         > reference_intervals[1:, 0]).any():
         raise ValueError('Chord Intervals must not overlap')
 
     est_ts = np.unique(estimated_intervals.flatten())
@@ -1477,8 +1488,8 @@ def merge_chord_intervals(intervals, labels):
     prev_rt = None
     prev_st = None
     prev_ba = None
-    for s, e, rt, st, ba in zip(intervals[:, 0], intervals[:, 1],
-                                roots, semitones, basses):
+    for s, e, rt, st, ba in zip(intervals[:, 0], intervals[:, 1], roots,
+                                semitones, basses):
         if rt != prev_rt or (st != prev_st).any() or ba != prev_ba:
             prev_rt, prev_st, prev_ba = rt, st, ba
             merged_ivs.append([s, e])
@@ -1529,9 +1540,11 @@ def evaluate(ref_intervals, ref_labels, est_intervals, est_labels, **kwargs):
         the value is the (float) score achieved.
     """
     # Append or crop estimated intervals so their span is the same as reference
-    est_intervals, est_labels = util.adjust_intervals(
-        est_intervals, est_labels, ref_intervals.min(), ref_intervals.max(),
-        NO_CHORD, NO_CHORD)
+    est_intervals, est_labels = util.adjust_intervals(est_intervals,
+                                                      est_labels,
+                                                      ref_intervals.min(),
+                                                      ref_intervals.max(),
+                                                      NO_CHORD, NO_CHORD)
     # use merged intervals for segmentation evaluation
     merged_ref_intervals = merge_chord_intervals(ref_intervals, ref_labels)
     merged_est_intervals = merge_chord_intervals(est_intervals, est_labels)
@@ -1546,29 +1559,27 @@ def evaluate(ref_intervals, ref_labels, est_intervals, est_labels, **kwargs):
 
     scores['thirds'] = weighted_accuracy(thirds(ref_labels, est_labels),
                                          durations)
-    scores['thirds_inv'] = weighted_accuracy(thirds_inv(ref_labels,
-                                                        est_labels), durations)
+    scores['thirds_inv'] = weighted_accuracy(
+        thirds_inv(ref_labels, est_labels), durations)
     scores['triads'] = weighted_accuracy(triads(ref_labels, est_labels),
                                          durations)
-    scores['triads_inv'] = weighted_accuracy(triads_inv(ref_labels,
-                                                        est_labels), durations)
+    scores['triads_inv'] = weighted_accuracy(
+        triads_inv(ref_labels, est_labels), durations)
     scores['tetrads'] = weighted_accuracy(tetrads(ref_labels, est_labels),
                                           durations)
-    scores['tetrads_inv'] = weighted_accuracy(tetrads_inv(ref_labels,
-                                                          est_labels),
-                                              durations)
+    scores['tetrads_inv'] = weighted_accuracy(
+        tetrads_inv(ref_labels, est_labels), durations)
     scores['root'] = weighted_accuracy(root(ref_labels, est_labels), durations)
     scores['mirex'] = weighted_accuracy(mirex(ref_labels, est_labels),
                                         durations)
     scores['majmin'] = weighted_accuracy(majmin(ref_labels, est_labels),
                                          durations)
-    scores['majmin_inv'] = weighted_accuracy(majmin_inv(ref_labels,
-                                                        est_labels), durations)
+    scores['majmin_inv'] = weighted_accuracy(
+        majmin_inv(ref_labels, est_labels), durations)
     scores['sevenths'] = weighted_accuracy(sevenths(ref_labels, est_labels),
                                            durations)
-    scores['sevenths_inv'] = weighted_accuracy(sevenths_inv(ref_labels,
-                                                            est_labels),
-                                               durations)
+    scores['sevenths_inv'] = weighted_accuracy(
+        sevenths_inv(ref_labels, est_labels), durations)
     scores['underseg'] = underseg(merged_ref_intervals, merged_est_intervals)
     scores['overseg'] = overseg(merged_ref_intervals, merged_est_intervals)
     scores['seg'] = min(scores['overseg'], scores['underseg'])

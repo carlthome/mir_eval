@@ -103,20 +103,21 @@ def __unit_test_structure_function(metric):
     # Check for correct output when input is the same
     estimated_intervals = reference_intervals
     if metric == mir_eval.segment.mutual_information:
-        assert np.allclose(metric(reference_intervals, labels,
-                                  estimated_intervals, labels),
-                           [np.log(2), 1, 1])
+        assert np.allclose(
+            metric(reference_intervals, labels, estimated_intervals, labels),
+            [np.log(2), 1, 1])
     else:
-        assert np.allclose(metric(reference_intervals, labels,
-                                  estimated_intervals, labels), 1)
+        assert np.allclose(
+            metric(reference_intervals, labels, estimated_intervals, labels),
+            1)
 
 
 def __check_score(sco_f, metric, score, expected_score):
     assert np.allclose(score, expected_score, atol=A_TOL)
 
 
-def __unit_test_permuted_segments(sco_f, ref_int, ref_lab,
-                                  est_int, est_lab, scores):
+def __unit_test_permuted_segments(sco_f, ref_int, ref_lab, est_int, est_lab,
+                                  scores):
     # Test for issue #202
 
     # Generate a random permutation of the reference segments
@@ -125,8 +126,8 @@ def __unit_test_permuted_segments(sco_f, ref_int, ref_lab,
     perm_int = ref_int[idx]
     perm_lab = [ref_lab[_] for _ in idx]
 
-    perm_scores = mir_eval.segment.evaluate(perm_int, perm_lab,
-                                            est_int, est_lab)
+    perm_scores = mir_eval.segment.evaluate(perm_int, perm_lab, est_int,
+                                            est_lab)
 
     for metric in scores:
         __check_score(sco_f, metric, perm_scores[metric], scores[metric])
@@ -141,16 +142,14 @@ def test_segment_functions():
     assert len(ref_files) == len(est_files) == len(sco_files) > 0
 
     # Unit tests for boundary
-    for metric in [mir_eval.segment.detection,
-                   mir_eval.segment.deviation]:
+    for metric in [mir_eval.segment.detection, mir_eval.segment.deviation]:
         yield (__unit_test_boundary_function, metric)
     # And structure
-    for metric in [mir_eval.segment.pairwise,
-                   mir_eval.segment.rand_index,
-                   mir_eval.segment.ari,
-                   mir_eval.segment.mutual_information,
-                   mir_eval.segment.nce,
-                   mir_eval.segment.vmeasure]:
+    for metric in [
+            mir_eval.segment.pairwise, mir_eval.segment.rand_index,
+            mir_eval.segment.ari, mir_eval.segment.mutual_information,
+            mir_eval.segment.nce, mir_eval.segment.vmeasure
+    ]:
         yield (__unit_test_structure_function, metric)
     # Regression tests
     for ref_f, est_f, sco_f in zip(ref_files, est_files, sco_files):
@@ -170,6 +169,5 @@ def test_segment_functions():
             yield (__check_score, sco_f, metric, scores[metric],
                    expected_scores[metric])
 
-        yield (__unit_test_permuted_segments, sco_f,
-               ref_intervals, ref_labels,
+        yield (__unit_test_permuted_segments, sco_f, ref_intervals, ref_labels,
                est_intervals, est_labels, scores)

@@ -46,8 +46,11 @@ def test_tempo_pass():
     good_est = np.array([120, 180])
     good_tol = 0.08
 
-    for good_tempo in [np.array([50, 50]), np.array([0, 50]),
-                       np.array([50, 0])]:
+    for good_tempo in [
+            np.array([50, 50]),
+            np.array([0, 50]),
+            np.array([50, 0])
+    ]:
         yield mir_eval.tempo.detection, good_tempo,\
             good_weight, good_est, good_tol
         yield mir_eval.tempo.detection, good_ref,\
@@ -69,8 +72,13 @@ def test_tempo_fail():
     good_est = np.array([120, 180])
     good_tol = 0.08
 
-    for bad_tempo in [np.array([-1, -1]), np.array([-1, 0]),
-                      np.array([-1, 50]), np.array([0, 1, 2]), np.array([0])]:
+    for bad_tempo in [
+            np.array([-1, -1]),
+            np.array([-1, 0]),
+            np.array([-1, 50]),
+            np.array([0, 1, 2]),
+            np.array([0])
+    ]:
         yield __test, bad_tempo, good_weight, good_est, good_tol
         yield __test, good_ref, good_weight, bad_tempo, good_tol
 

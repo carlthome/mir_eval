@@ -68,7 +68,10 @@ def generate_labels(items, prefix='__'):
     return ['{}{}'.format(prefix, n) for n in range(len(items))]
 
 
-def intervals_to_samples(intervals, labels, offset=0, sample_size=0.1,
+def intervals_to_samples(intervals,
+                         labels,
+                         offset=0,
+                         sample_size=0.1,
                          fill_value=None):
     """Convert an array of labeled time intervals to annotated samples.
 
@@ -113,9 +116,9 @@ def intervals_to_samples(intervals, labels, offset=0, sample_size=0.1,
     # Round intervals to the sample size
     num_samples = int(np.floor(intervals.max() / sample_size))
     sample_indices = np.arange(num_samples, dtype=np.float32)
-    sample_times = (sample_indices*sample_size + offset).tolist()
-    sampled_labels = interpolate_intervals(
-        intervals, labels, sample_times, fill_value)
+    sample_times = (sample_indices * sample_size + offset).tolist()
+    sampled_labels = interpolate_intervals(intervals, labels, sample_times,
+                                           fill_value)
 
     return sample_times, sampled_labels
 
@@ -224,7 +227,8 @@ def f_measure(precision, recall, beta=1.0):
     if precision == 0 and recall == 0:
         return 0.0
 
-    return (1 + beta**2)*precision*recall/((beta**2)*precision + recall)
+    return (1 + beta**2) * precision * recall / (
+        (beta**2) * precision + recall)
 
 
 def intervals_to_boundaries(intervals, q=5):
@@ -368,8 +372,11 @@ def adjust_intervals(intervals,
     return intervals, labels
 
 
-def adjust_events(events, labels=None, t_min=0.0,
-                  t_max=None, label_prefix='__'):
+def adjust_events(events,
+                  labels=None,
+                  t_min=0.0,
+                  t_max=None,
+                  label_prefix='__'):
     """Adjust the given list of event times to span the range
     ``[t_min, t_max]``.
 
@@ -465,6 +472,7 @@ def intersect_files(flist1, flist2):
     sublist2 : list
         corresponding filepaths from ``flist2``
     """
+
     def fname(abs_path):
         """Returns the filename given an absolute path.
 
@@ -511,16 +519,16 @@ def merge_labeled_intervals(x_intervals, x_labels, y_intervals, y_labels):
     new_y_labels : list
         New labels for the sequence ``y``
     """
-    align_check = [x_intervals[0, 0] == y_intervals[0, 0],
-                   x_intervals[-1, 1] == y_intervals[-1, 1]]
+    align_check = [
+        x_intervals[0, 0] == y_intervals[0, 0],
+        x_intervals[-1, 1] == y_intervals[-1, 1]
+    ]
     if False in align_check:
-        raise ValueError(
-            "Time intervals do not align; did you mean to call "
-            "'adjust_intervals()' first?")
+        raise ValueError("Time intervals do not align; did you mean to call "
+                         "'adjust_intervals()' first?")
     time_boundaries = np.unique(
         np.concatenate([x_intervals, y_intervals], axis=0))
-    output_intervals = np.array(
-        [time_boundaries[:-1], time_boundaries[1:]]).T
+    output_intervals = np.array([time_boundaries[:-1], time_boundaries[1:]]).T
 
     x_labels_out, y_labels_out = [], []
     x_label_range = np.arange(len(x_labels))
@@ -794,7 +802,9 @@ def validate_events(events, max_time=30000.):
         raise ValueError('Events should be in increasing order.')
 
 
-def validate_frequencies(frequencies, max_freq, min_freq,
+def validate_frequencies(frequencies,
+                         max_freq,
+                         min_freq,
                          allow_negatives=False):
     """Checks that a 1-d frequency ndarray is well-formed, and raises errors if
     not.
@@ -936,4 +946,4 @@ def midi_to_hz(midi):
     freqs : number or ndarray
         Frequency/frequencies in Hz corresponding to `midi`
     """
-    return 440.0 * (2.0 ** ((midi - 69.0)/12.0))
+    return 440.0 * (2.0**((midi - 69.0) / 12.0))

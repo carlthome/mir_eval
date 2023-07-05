@@ -21,9 +21,26 @@ import collections
 
 from . import util
 
-KEY_TO_SEMITONE = {'c': 0, 'c#': 1, 'db': 1, 'd': 2, 'd#': 3, 'eb': 3, 'e': 4,
-                   'f': 5, 'f#': 6, 'gb': 6, 'g': 7, 'g#': 8, 'ab': 8, 'a': 9,
-                   'a#': 10, 'bb': 10, 'b': 11, 'x': None}
+KEY_TO_SEMITONE = {
+    'c': 0,
+    'c#': 1,
+    'db': 1,
+    'd': 2,
+    'd#': 3,
+    'eb': 3,
+    'e': 4,
+    'f': 5,
+    'f#': 6,
+    'gb': 6,
+    'g': 7,
+    'g#': 8,
+    'ab': 8,
+    'a': 9,
+    'a#': 10,
+    'bb': 10,
+    'b': 11,
+    'x': None
+}
 
 
 def validate_key(key):
@@ -44,17 +61,16 @@ def validate_key(key):
         key, mode = key.split()
 
         if key.lower() == 'x':
-            raise ValueError(
-                "Mode {} is invalid; 'X' (Uncategorized) "
-                "doesn't have mode".format(mode))
+            raise ValueError("Mode {} is invalid; 'X' (Uncategorized) "
+                             "doesn't have mode".format(mode))
         if key.lower() not in KEY_TO_SEMITONE:
             raise ValueError(
                 "Key {} is invalid; should be e.g. D or C# or Eb or "
                 "X (Uncategorized)".format(key))
         if mode not in ['major', 'minor', 'other']:
             raise ValueError(
-                "Mode '{}' is invalid; must be 'major', 'minor' or 'other'"
-                .format(mode))
+                "Mode '{}' is invalid; must be 'major', 'minor' or 'other'".
+                format(mode))
 
 
 def validate(reference_key, estimated_key):
@@ -143,16 +159,16 @@ def weighted_score(reference_key, estimated_key):
     if reference_key is None or estimated_key is None:
         return 0.
     # If keys are the same mode and a perfect fifth (differ by 7 semitones)
-    if (estimated_mode == reference_mode and
-            (estimated_key - reference_key) % 12 == 7):
+    if (estimated_mode == reference_mode
+            and (estimated_key - reference_key) % 12 == 7):
         return 0.5
     # Estimated key is relative minor of reference key (9 semitones)
-    if (estimated_mode != reference_mode == 'major' and
-            (estimated_key - reference_key) % 12 == 9):
+    if (estimated_mode != reference_mode == 'major'
+            and (estimated_key - reference_key) % 12 == 9):
         return 0.3
     # Estimated key is relative major of reference key (3 semitones)
-    if (estimated_mode != reference_mode == 'minor' and
-            (estimated_key - reference_key) % 12 == 3):
+    if (estimated_mode != reference_mode == 'minor'
+            and (estimated_key - reference_key) % 12 == 3):
         return 0.3
     # If keys are in different modes and parallel (same key name)
     if estimated_mode != reference_mode and reference_key == estimated_key:
@@ -191,7 +207,7 @@ def evaluate(reference_key, estimated_key, **kwargs):
     # Compute all metrics
     scores = collections.OrderedDict()
 
-    scores['Weighted Score'] = util.filter_kwargs(
-        weighted_score, reference_key, estimated_key)
+    scores['Weighted Score'] = util.filter_kwargs(weighted_score,
+                                                  reference_key, estimated_key)
 
     return scores

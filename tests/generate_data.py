@@ -19,7 +19,6 @@ So, for example, if you'd like to generate data for onset and melody,run
     ./generate_data.py onset melody
 '''
 
-
 import glob
 import json
 import os
@@ -89,8 +88,7 @@ if __name__ == '__main__':
     tasks['transcription_velocity'] = (mir_eval.transcription_velocity,
                                        load_transcription_velocity,
                                        'data/transcription_velocity/{}*.txt')
-    tasks['key'] = (mir_eval.key, mir_eval.io.load_key,
-                    'data/key/{}*.txt')
+    tasks['key'] = (mir_eval.key, mir_eval.io.load_key, 'data/key/{}*.txt')
     # Get task keys from argv
     for task in sys.argv[1:]:
         print('Generating data for {}'.format(task))

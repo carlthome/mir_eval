@@ -76,8 +76,14 @@ def __get_axes(ax=None, fig=None):
     return fig.gca(), new_axes
 
 
-def segments(intervals, labels, base=None, height=None, text=False,
-             text_kw=None, ax=None, **kwargs):
+def segments(intervals,
+             labels,
+             base=None,
+             height=None,
+             text=False,
+             text_kw=None,
+             ax=None,
+             **kwargs):
     """Plot a segmentation as a set of disjoint rectangles.
 
     Parameters
@@ -168,8 +174,10 @@ def segments(intervals, labels, base=None, height=None, text=False,
 
         if text:
             ann = ax.annotate(lab,
-                              xy=(ival[0], height), xycoords='data',
-                              xytext=(8, -10), textcoords='offset points',
+                              xy=(ival[0], height),
+                              xycoords='data',
+                              xytext=(8, -10),
+                              textcoords='offset points',
                               **text_kw)
             ann.set_clip_path(rect)
 
@@ -183,9 +191,15 @@ def segments(intervals, labels, base=None, height=None, text=False,
     return ax
 
 
-def labeled_intervals(intervals, labels, label_set=None,
-                      base=None, height=None, extend_labels=True,
-                      ax=None, tick=True, **kwargs):
+def labeled_intervals(intervals,
+                      labels,
+                      label_set=None,
+                      base=None,
+                      height=None,
+                      extend_labels=True,
+                      ax=None,
+                      tick=True,
+                      **kwargs):
     """Plot labeled intervals with each label on its own row.
 
     Parameters
@@ -328,6 +342,7 @@ class IntervalFormatter(Formatter):
     ticks : array-like of string
         The labels for the ticks
     """
+
     def __init__(self, base, ticks):
 
         self._map = {int(k): v for k, v in zip(base, ticks)}
@@ -377,8 +392,7 @@ def hierarchy(intervals_hier, labels_hier, levels=None, ax=None, **kwargs):
     # Count the pre-existing patches
     n_patches = len(ax.patches)
 
-    for ints, labs, key in zip(intervals_hier[::-1],
-                               labels_hier[::-1],
+    for ints, labs, key in zip(intervals_hier[::-1], labels_hier[::-1],
                                levels[::-1]):
         labeled_intervals(ints, labs, label=key, ax=ax, **kwargs)
 
@@ -388,7 +402,12 @@ def hierarchy(intervals_hier, labels_hier, levels=None, ax=None, **kwargs):
     return ax
 
 
-def events(times, labels=None, base=None, height=None, ax=None, text_kw=None,
+def events(times,
+           labels=None,
+           base=None,
+           height=None,
+           ax=None,
+           text_kw=None,
            **kwargs):
     """Plot event times as a set of vertical lines.
 
@@ -473,7 +492,8 @@ def events(times, labels=None, base=None, height=None, ax=None, text_kw=None,
             ax.annotate(lab,
                         xy=(path.vertices[0][0], height),
                         xycoords='data',
-                        xytext=(8, -10), textcoords='offset points',
+                        xytext=(8, -10),
+                        textcoords='offset points',
                         **text_kw)
 
     if new_axes:
@@ -528,8 +548,8 @@ def pitch(times, frequencies, midi=False, unvoiced=False, ax=None, **kwargs):
     times = np.asarray(times)
 
     # First, segment into contiguously voiced contours
-    frequencies, voicings = freq_to_voicing(np.asarray(frequencies,
-                                                       dtype=np.float64))
+    frequencies, voicings = freq_to_voicing(
+        np.asarray(frequencies, dtype=np.float64))
     voicings = voicings.astype(bool)
 
     # Here are all the change-points
@@ -572,7 +592,11 @@ def pitch(times, frequencies, midi=False, unvoiced=False, ax=None, **kwargs):
     return ax
 
 
-def multipitch(times, frequencies, midi=False, unvoiced=False, ax=None,
+def multipitch(times,
+               frequencies,
+               midi=False,
+               unvoiced=False,
+               ax=None,
                **kwargs):
     """Visualize multiple f0 measurements.
 
@@ -701,7 +725,8 @@ def piano_roll(intervals, pitches=None, midi=None, ax=None, **kwargs):
         midi = hz_to_midi(pitches)
 
     scale = np.arange(128)
-    ax = labeled_intervals(intervals, np.round(midi).astype(int),
+    ax = labeled_intervals(intervals,
+                           np.round(midi).astype(int),
                            label_set=scale,
                            tick=False,
                            ax=ax,
@@ -782,10 +807,11 @@ def separation(sources, fs=22050, labels=None, alpha=0.75, ax=None, **kwargs):
         color = next(ax._get_lines.prop_cycler)['color']
         color = color_conv.to_rgba(color, alpha=alpha)
         cmap = LinearSegmentedColormap.from_list(labels[i],
-                                                 [(1.0, 1.0, 1.0, 0.0),
-                                                  color])
+                                                 [(1.0, 1.0, 1.0, 0.0), color])
 
-        ax.pcolormesh(times, freqs, spec,
+        ax.pcolormesh(times,
+                      freqs,
+                      spec,
                       cmap=cmap,
                       norm=LogNorm(vmin=ref_min, vmax=ref_max),
                       shading='gouraud',

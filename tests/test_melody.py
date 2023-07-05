@@ -57,30 +57,27 @@ def test_constant_hop_timebase():
 
 def test_resample_melody_series():
     # Check for a small example including a zero transition
-    times = np.arange(4)/35.0
+    times = np.arange(4) / 35.0
     cents = np.array([2., 0., -1., 1.])
     voicing = np.array([1, 0, 1, 1])
     times_new = np.linspace(0, .08, 9)
     expected_cents = np.array([2., 2., 2., 0., 0., 0., -.8, -.1, .6])
     expected_voicing = np.array([1, 1, 1, 0, 0, 0, 1, 1, 1])
-    (res_cents,
-     res_voicing) = mir_eval.melody.resample_melody_series(times, cents,
-                                                           voicing, times_new)
+    (res_cents, res_voicing) = mir_eval.melody.resample_melody_series(
+        times, cents, voicing, times_new)
     assert np.allclose(res_cents, expected_cents)
     assert np.allclose(res_voicing, expected_voicing)
 
     # Check for a small example including a zero transition - nonbinary voicing
-    times = np.arange(4)/35.0
+    times = np.arange(4) / 35.0
     cents = np.array([2., 0., -1., 1.])
     voicing = np.array([0.8, 0.0, 0.2, 1.0])
     times_new = np.linspace(0, .08, 9)
     expected_cents = np.array([2., 2., 2., 0., 0., 0., -.8, -.1, .6])
     expected_voicing = np.array(
-        [0.8, 0.52, 0.24, 0.01, 0.08, 0.15, 0.28, 0.56, 0.84]
-    )
-    (res_cents,
-     res_voicing) = mir_eval.melody.resample_melody_series(times, cents,
-                                                           voicing, times_new)
+        [0.8, 0.52, 0.24, 0.01, 0.08, 0.15, 0.28, 0.56, 0.84])
+    (res_cents, res_voicing) = mir_eval.melody.resample_melody_series(
+        times, cents, voicing, times_new)
     assert np.allclose(res_cents, expected_cents)
     assert np.allclose(res_voicing, expected_voicing)
 
@@ -93,9 +90,8 @@ def test_resample_melody_series_same_times():
     voicing = np.array([0, 0, 1, 1])
     expected_cents = np.array([2., 0., -1., 1.])
     expected_voicing = np.array([False, False, True, True])
-    (res_cents,
-     res_voicing) = mir_eval.melody.resample_melody_series(times, cents,
-                                                           voicing, times_new)
+    (res_cents, res_voicing) = mir_eval.melody.resample_melody_series(
+        times, cents, voicing, times_new)
     assert np.allclose(res_cents, expected_cents)
     assert np.allclose(res_voicing, expected_voicing)
 
@@ -106,9 +102,8 @@ def test_resample_melody_series_same_times():
     voicing = np.array([0.5, 0.8, 0.9, 1.0])
     expected_cents = np.array([2., 0., -1., 1.])
     expected_voicing = np.array([0.5, 0.8, 0.9, 1.0])
-    (res_cents,
-     res_voicing) = mir_eval.melody.resample_melody_series(times, cents,
-                                                           voicing, times_new)
+    (res_cents, res_voicing) = mir_eval.melody.resample_melody_series(
+        times, cents, voicing, times_new)
     assert np.allclose(res_cents, expected_cents)
     assert np.allclose(res_voicing, expected_voicing)
 
@@ -119,26 +114,25 @@ def test_to_cent_voicing():
     ref_time, ref_freq = mir_eval.io.load_time_series(ref_file)
     est_file = sorted(glob.glob(EST_GLOB))[0]
     est_time, est_freq = mir_eval.io.load_time_series(est_file)
-    ref_v, ref_c, est_v, est_c = mir_eval.melody.to_cent_voicing(ref_time,
-                                                                 ref_freq,
-                                                                 est_time,
-                                                                 est_freq)
+    ref_v, ref_c, est_v, est_c = mir_eval.melody.to_cent_voicing(
+        ref_time, ref_freq, est_time, est_freq)
     # Expected values
     test_range = np.arange(220, 225)
     expected_ref_v = np.array([False, False, False, True, True])
-    expected_ref_c = np.array([0., 0., 0., 6056.8837818916609,
-                               6028.5504583021921])
-    expected_est_v = np.array([False]*5)
-    expected_est_c = np.array([5351.3179423647571]*5)
+    expected_ref_c = np.array(
+        [0., 0., 0., 6056.8837818916609, 6028.5504583021921])
+    expected_est_v = np.array([False] * 5)
+    expected_est_c = np.array([5351.3179423647571] * 5)
     assert np.allclose(ref_v[test_range], expected_ref_v)
     assert np.allclose(ref_c[test_range], expected_ref_c)
     assert np.allclose(est_v[test_range], expected_est_v)
     assert np.allclose(est_c[test_range], expected_est_c)
 
     # Test that a 0 is added to the beginning
-    for return_item in mir_eval.melody.to_cent_voicing(
-            np.array([1., 2.]), np.array([440., 442.]), np.array([1., 2.]),
-            np.array([441., 443.])):
+    for return_item in mir_eval.melody.to_cent_voicing(np.array([1., 2.]),
+                                                       np.array([440., 442.]),
+                                                       np.array([1., 2.]),
+                                                       np.array([441., 443.])):
         assert len(return_item) == 3
         assert return_item[0] == return_item[1]
 
@@ -146,22 +140,21 @@ def test_to_cent_voicing():
     ref_time, ref_freq = mir_eval.io.load_time_series(ref_file)
     _, ref_reward = mir_eval.io.load_time_series("data/melody/reward00.txt")
     _, est_voicing = mir_eval.io.load_time_series(
-        "data/melody/voicingest00.txt"
-    )
-    (ref_v, ref_c,
-     est_v, est_c) = mir_eval.melody.to_cent_voicing(ref_time,
-                                                     ref_freq,
-                                                     est_time,
-                                                     est_freq,
-                                                     est_voicing=est_voicing,
-                                                     ref_reward=ref_reward)
+        "data/melody/voicingest00.txt")
+    (ref_v, ref_c, est_v,
+     est_c) = mir_eval.melody.to_cent_voicing(ref_time,
+                                              ref_freq,
+                                              est_time,
+                                              est_freq,
+                                              est_voicing=est_voicing,
+                                              ref_reward=ref_reward)
     # Expected values
     test_range = np.arange(220, 225)
     expected_ref_v = np.array([0., 0., 0., 1., 0.3])
-    expected_ref_c = np.array([0., 0., 0., 6056.8837818916609,
-                               6028.5504583021921])
+    expected_ref_c = np.array(
+        [0., 0., 0., 6056.8837818916609, 6028.5504583021921])
     expected_est_v = np.array([0.2, 0.2, 0.2, 0.2, 0.2])
-    expected_est_c = np.array([5351.3179423647571]*5)
+    expected_est_c = np.array([5351.3179423647571] * 5)
     assert np.allclose(ref_v[test_range], expected_ref_v)
     assert np.allclose(ref_c[test_range], expected_ref_c)
     assert np.allclose(est_v[test_range], expected_est_v)
@@ -228,7 +221,9 @@ def test_continuous_voicing_metrics():
     ]
 
     for est_voicing, expected_scores in zip(all_est_voicing, all_expected):
-        actual_scores = mir_eval.melody.evaluate(ref_time, ref_freq, est_time,
+        actual_scores = mir_eval.melody.evaluate(ref_time,
+                                                 ref_freq,
+                                                 est_time,
                                                  est_freq,
                                                  est_voicing=est_voicing)
         for metric in actual_scores:
@@ -306,7 +301,9 @@ def test_continuous_voicing_metrics():
     ]
 
     for ref_reward, expected_scores in zip(all_rewards, all_expected):
-        actual_scores = mir_eval.melody.evaluate(ref_time, ref_freq, est_time,
+        actual_scores = mir_eval.melody.evaluate(ref_time,
+                                                 ref_freq,
+                                                 est_time,
                                                  est_freq,
                                                  est_voicing=est_voicing,
                                                  ref_reward=ref_reward)
@@ -322,11 +319,12 @@ def __unit_test_voicing_measures(metric):
         score = metric(np.array([]), np.array([]))
         assert len(w) == 4
         assert np.all([issubclass(wrn.category, UserWarning) for wrn in w])
-        assert [str(wrn.message)
-                for wrn in w] == ["Reference voicing array is empty.",
-                                  "Estimated voicing array is empty.",
-                                  "Reference melody has no voiced frames.",
-                                  "Estimated melody has no voiced frames."]
+        assert [str(wrn.message) for wrn in w] == [
+            "Reference voicing array is empty.",
+            "Estimated voicing array is empty.",
+            "Reference melody has no voiced frames.",
+            "Estimated melody has no voiced frames."
+        ]
         # And that the metric is 0
         assert np.allclose(score, 0)
         # Also test for a warning when the arrays have non-voiced content
@@ -346,13 +344,14 @@ def __unit_test_melody_function(metric):
         score = metric(np.array([]), np.array([]), np.array([]), np.array([]))
         assert len(w) == 6
         assert np.all([issubclass(wrn.category, UserWarning) for wrn in w])
-        assert [str(wrn.message)
-                for wrn in w] == ["Reference voicing array is empty.",
-                                  "Estimated voicing array is empty.",
-                                  "Reference melody has no voiced frames.",
-                                  "Estimated melody has no voiced frames.",
-                                  "Reference frequency array is empty.",
-                                  "Estimated frequency array is empty."]
+        assert [str(wrn.message) for wrn in w] == [
+            "Reference voicing array is empty.",
+            "Estimated voicing array is empty.",
+            "Reference melody has no voiced frames.",
+            "Estimated melody has no voiced frames.",
+            "Reference frequency array is empty.",
+            "Estimated frequency array is empty."
+        ]
         # And that the metric is 0
         assert np.allclose(score, 0)
         # Also test for a warning when the arrays have non-voiced content
@@ -362,8 +361,8 @@ def __unit_test_melody_function(metric):
         assert str(w[-1].message) == "Estimated melody has no voiced frames."
 
     # Now test validation function - all inputs must be same length
-    nose.tools.assert_raises(ValueError, metric, np.ones(10),
-                             np.ones(12), np.ones(10), np.ones(10))
+    nose.tools.assert_raises(ValueError, metric, np.ones(10), np.ones(12),
+                             np.ones(10), np.ones(10))
 
 
 def __check_score(sco_f, metric, score, expected_score):
@@ -379,10 +378,12 @@ def test_melody_functions():
     assert len(ref_files) == len(est_files) == len(sco_files) > 0
 
     # Unit tests
-    for metric in [mir_eval.melody.voicing_measures,
-                   mir_eval.melody.raw_pitch_accuracy,
-                   mir_eval.melody.raw_chroma_accuracy,
-                   mir_eval.melody.overall_accuracy]:
+    for metric in [
+            mir_eval.melody.voicing_measures,
+            mir_eval.melody.raw_pitch_accuracy,
+            mir_eval.melody.raw_chroma_accuracy,
+            mir_eval.melody.overall_accuracy
+    ]:
         if metric == mir_eval.melody.voicing_measures:
             yield (__unit_test_voicing_measures, metric)
         else:
@@ -412,10 +413,12 @@ def test_melody_functions_continuous_voicing_equivalence():
     assert len(ref_files) == len(est_files) == len(sco_files) > 0
 
     # Unit tests
-    for metric in [mir_eval.melody.voicing_measures,
-                   mir_eval.melody.raw_pitch_accuracy,
-                   mir_eval.melody.raw_chroma_accuracy,
-                   mir_eval.melody.overall_accuracy]:
+    for metric in [
+            mir_eval.melody.voicing_measures,
+            mir_eval.melody.raw_pitch_accuracy,
+            mir_eval.melody.raw_chroma_accuracy,
+            mir_eval.melody.overall_accuracy
+    ]:
         if metric == mir_eval.melody.voicing_measures:
             yield (__unit_test_voicing_measures, metric)
         else:
@@ -431,8 +434,11 @@ def test_melody_functions_continuous_voicing_equivalence():
         est_time, est_freq = mir_eval.io.load_time_series(est_f)
         # voicing equivalent from frequency
         est_voicing = (est_freq >= 0).astype('float')
-        scores = mir_eval.melody.evaluate(ref_time, ref_freq, est_time,
-                                          est_freq, est_voicing=est_voicing,
+        scores = mir_eval.melody.evaluate(ref_time,
+                                          ref_freq,
+                                          est_time,
+                                          est_freq,
+                                          est_voicing=est_voicing,
                                           ref_reward=ref_reward)
         for metric in scores:
             # This is a simple hack to make nosetest's messages more useful

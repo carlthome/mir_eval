@@ -19,8 +19,8 @@ def test_negative_velocity():
     good_i, good_p, good_v = np.array([[0, 1]]), np.array([100]), np.array([1])
     bad_i, bad_p, bad_v = np.array([[0, 1]]), np.array([100]), np.array([-1])
 
-    yield (raises(ValueError)(mir_eval.transcription_velocity.validate),
-           bad_i, bad_p, bad_v, good_i, good_p, good_v)
+    yield (raises(ValueError)(mir_eval.transcription_velocity.validate), bad_i,
+           bad_p, bad_v, good_i, good_p, good_v)
     yield (raises(ValueError)(mir_eval.transcription_velocity.validate),
            good_i, good_p, good_v, bad_i, bad_p, bad_v)
 
@@ -30,8 +30,8 @@ def test_wrong_shape_velocity():
     good_i, good_p, good_v = np.array([[0, 1]]), np.array([100]), np.array([1])
     bad_i, bad_p, bad_v = np.array([[0, 1]]), np.array([100]), np.array([1, 2])
 
-    yield (raises(ValueError)(mir_eval.transcription_velocity.validate),
-           bad_i, bad_p, bad_v, good_i, good_p, good_v)
+    yield (raises(ValueError)(mir_eval.transcription_velocity.validate), bad_i,
+           bad_p, bad_v, good_i, good_p, good_v)
     yield (raises(ValueError)(mir_eval.transcription_velocity.validate),
            good_i, good_p, good_v, bad_i, bad_p, bad_v)
 
@@ -46,7 +46,7 @@ def test_precision_recall_f1_overlap():
     est_v = np.array([10, 70, 110])
     p, r, f, o = mir_eval.transcription_velocity.precision_recall_f1_overlap(
         ref_i, ref_p, ref_v, est_i, est_p, est_v)
-    assert np.allclose((p, r, f, o), (2/3., 2/3., 2/3., 1.))
+    assert np.allclose((p, r, f, o), (2 / 3., 2 / 3., 2 / 3., 1.))
     p, r, f, o = mir_eval.transcription_velocity.precision_recall_f1_overlap(
         ref_i, ref_p, ref_v, est_i, est_p, est_v, velocity_tolerance=0.3)
     assert np.allclose((p, r, f, o), (1., 1., 1., 1.))
@@ -65,8 +65,8 @@ def test_precision_recall_f1_overlap_empty():
 
 def test_precision_recall_f1_overlap_no_overlap():
     p, r, f, o = mir_eval.transcription_velocity.precision_recall_f1_overlap(
-        np.array([[1, 2]]), np.array([1]), np.array([1]),
-        np.array([[3, 4]]), np.array([1]), np.array([1]))
+        np.array([[1, 2]]), np.array([1]), np.array([1]), np.array([[3, 4]]),
+        np.array([1]), np.array([1]))
     assert (p, r, f, o) == (0., 0., 0., 0.)
 
 

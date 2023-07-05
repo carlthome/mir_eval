@@ -94,8 +94,9 @@ def load_delimited(filename, converters, delimiter=r'\s+', comment='#'):
             # Throw a helpful error if we got an unexpected # of columns
             if n_columns != len(data):
                 raise ValueError('Expected {} columns, got {} at '
-                                 '{}:{:d}:\n\t{}'.format(n_columns, len(data),
-                                                         filename, row, line))
+                                 '{}:{:d}:\n\t{}'.format(
+                                     n_columns, len(data), filename, row,
+                                     line))
 
             for value, column, converter in zip(data, columns, converters):
                 # Try converting the value, throw a helpful error on failure
@@ -141,7 +142,8 @@ def load_events(filename, delimiter=r'\s+', comment='#'):
     """
     # Use our universal function to load in the events
     events = load_delimited(filename, [float],
-                            delimiter=delimiter, comment=comment)
+                            delimiter=delimiter,
+                            comment=comment)
     events = np.array(events)
     # Validate them, but throw a warning in place of an error
     try:
@@ -412,11 +414,11 @@ def load_wav(path, mono=True):
     fs, audio_data = scipy.io.wavfile.read(path)
     # Make float in range [-1, 1]
     if audio_data.dtype == 'int8':
-        audio_data = audio_data/float(2**8)
+        audio_data = audio_data / float(2**8)
     elif audio_data.dtype == 'int16':
-        audio_data = audio_data/float(2**16)
+        audio_data = audio_data / float(2**16)
     elif audio_data.dtype == 'int32':
-        audio_data = audio_data/float(2**24)
+        audio_data = audio_data / float(2**24)
     else:
         raise ValueError('Got unexpected .wav data type '
                          '{}'.format(audio_data.dtype))
@@ -567,8 +569,11 @@ def load_tempo(filename, delimiter=r'\s+', comment='#'):
     return tempi, weight
 
 
-def load_ragged_time_series(filename, dtype=float, delimiter=r'\s+',
-                            header=False, comment='#'):
+def load_ragged_time_series(filename,
+                            dtype=float,
+                            delimiter=r'\s+',
+                            header=False,
+                            comment='#'):
     r"""Utility function for loading in data from a delimited time series
     annotation file with a variable number of columns. Assumes that column 0
     contains time stamps and columns 1 through n contain values. n may be
@@ -638,8 +643,8 @@ def load_ragged_time_series(filename, dtype=float, delimiter=r'\s+',
             except (TypeError, ValueError) as exe:
                 raise ValueError("Couldn't convert value {} using {} "
                                  "found at {}:{:d}:\n\t{}".format(
-                                   data[0], float.__name__,
-                                   filename, row, line)) from exe
+                                     data[0], float.__name__, filename, row,
+                                     line)) from exe
             times.append(converted_time)
 
             # cast values to a numpy array. time stamps with no values are cast
@@ -649,8 +654,8 @@ def load_ragged_time_series(filename, dtype=float, delimiter=r'\s+',
             except (TypeError, ValueError) as exe:
                 raise ValueError("Couldn't convert value {} using {} "
                                  "found at {}:{:d}:\n\t{}".format(
-                                   data[1:], dtype.__name__,
-                                   filename, row, line)) from exe
+                                     data[1:], dtype.__name__, filename, row,
+                                     line)) from exe
             values.append(converted_value)
 
     return np.array(times), values

@@ -30,9 +30,8 @@ def __unit_test_alignment_function(metric):
     # predicted and estimated alignments must have same length
     pred_alignments = np.array([[1.0, 2.0]])
     est_alignments = np.array([[1.0]])
-    nose.tools.assert_raises(
-        ValueError, metric, est_alignments, pred_alignments
-    )
+    nose.tools.assert_raises(ValueError, metric, est_alignments,
+                             pred_alignments)
 
 
 def __check_score(sco_f, metric, score, expected_score):
@@ -49,15 +48,12 @@ def test_alignment_functions():
 
     # Unit tests
     for metric in [
-        mir_eval.alignment.absolute_error,
-        mir_eval.alignment.percentage_correct,
-        mir_eval.alignment.percentage_correct_segments,
-        (
-            lambda ref_ts, est_ts: mir_eval.alignment.percentage_correct_segments(
-                ref_ts, est_ts, duration=max(np.max(ref_ts), np.max(est_ts))
-            )
-        ),
-        mir_eval.alignment.karaoke_perceptual_metric,
+            mir_eval.alignment.absolute_error,
+            mir_eval.alignment.percentage_correct,
+            mir_eval.alignment.percentage_correct_segments,
+        (lambda ref_ts, est_ts: mir_eval.alignment.percentage_correct_segments(
+            ref_ts, est_ts, duration=max(np.max(ref_ts), np.max(est_ts)))),
+            mir_eval.alignment.karaoke_perceptual_metric,
     ]:
         yield (__unit_test_alignment_function, metric)
     # Regression tests
@@ -69,9 +65,8 @@ def test_alignment_functions():
         # Load in an example alignment tracker output
         estimated_alignments = mir_eval.io.load_events(est_f)
         # Compute scores
-        scores = mir_eval.alignment.evaluate(
-            reference_alignments, estimated_alignments
-        )
+        scores = mir_eval.alignment.evaluate(reference_alignments,
+                                             estimated_alignments)
         # Compare them
         for metric in scores:
             # This is a simple hack to make nosetest's messages more useful

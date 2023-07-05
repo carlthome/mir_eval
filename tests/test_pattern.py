@@ -57,12 +57,12 @@ def test_pattern_functions():
     assert len(ref_files) == len(est_files) == len(sco_files) > 0
 
     # Unit tests
-    for metric in [mir_eval.pattern.standard_FPR,
-                   mir_eval.pattern.establishment_FPR,
-                   mir_eval.pattern.occurrence_FPR,
-                   mir_eval.pattern.three_layer_FPR,
-                   mir_eval.pattern.first_n_three_layer_P,
-                   mir_eval.pattern.first_n_target_proportion_R]:
+    for metric in [
+            mir_eval.pattern.standard_FPR, mir_eval.pattern.establishment_FPR,
+            mir_eval.pattern.occurrence_FPR, mir_eval.pattern.three_layer_FPR,
+            mir_eval.pattern.first_n_three_layer_P,
+            mir_eval.pattern.first_n_target_proportion_R
+    ]:
         yield (__unit_test_pattern_function, metric)
     # Regression tests
     for ref_f, est_f, sco_f in zip(ref_files, est_files, sco_files):

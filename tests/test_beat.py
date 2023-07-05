@@ -68,12 +68,11 @@ def test_beat_functions():
     assert len(ref_files) == len(est_files) == len(sco_files) > 0
 
     # Unit tests
-    for metric in [mir_eval.beat.f_measure,
-                   mir_eval.beat.cemgil,
-                   mir_eval.beat.goto,
-                   mir_eval.beat.p_score,
-                   mir_eval.beat.continuity,
-                   mir_eval.beat.information_gain]:
+    for metric in [
+            mir_eval.beat.f_measure, mir_eval.beat.cemgil, mir_eval.beat.goto,
+            mir_eval.beat.p_score, mir_eval.beat.continuity,
+            mir_eval.beat.information_gain
+    ]:
         yield (__unit_test_beat_function, metric)
     # Regression tests
     for ref_f, est_f, sco_f in zip(ref_files, est_files, sco_files):
@@ -97,14 +96,17 @@ def test_goto_proportion_correct():
     # This covers the case when over 75% of the beat tracking is correct, and
     # more than 3 beats are incorrect
     assert mir_eval.beat.goto(
-        np.arange(100), np.append(np.arange(80), np.arange(80, 100) + .2))
+        np.arange(100), np.append(np.arange(80),
+                                  np.arange(80, 100) + .2))
 
 
 def test_warning_on_one_beat():
     # This tests the metrics where passing only a single beat raises a warning
     # and returns 0
-    for metric in [mir_eval.beat.p_score, mir_eval.beat.continuity,
-                   mir_eval.beat.information_gain]:
+    for metric in [
+            mir_eval.beat.p_score, mir_eval.beat.continuity,
+            mir_eval.beat.information_gain
+    ]:
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter('always')
             # First, test for a warning on empty beats
@@ -126,7 +128,7 @@ def test_warning_on_one_beat():
 
 def test_continuity_edge_cases():
     # There is some special-case logic for when there are few beats
-    assert np.allclose(mir_eval.beat.continuity(
-        np.array([6., 6.]), np.array([6., 7.])), 0.)
-    assert np.allclose(mir_eval.beat.continuity(
-        np.array([6., 6.]), np.array([6.5, 7.])), 0.)
+    assert np.allclose(
+        mir_eval.beat.continuity(np.array([6., 6.]), np.array([6., 7.])), 0.)
+    assert np.allclose(
+        mir_eval.beat.continuity(np.array([6., 6.]), np.array([6.5, 7.])), 0.)

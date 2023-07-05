@@ -172,8 +172,11 @@ def validate_intervals(ref_intervals, est_intervals):
     util.validate_intervals(est_intervals)
 
 
-def match_note_offsets(ref_intervals, est_intervals, offset_ratio=0.2,
-                       offset_min_tolerance=0.05, strict=False):
+def match_note_offsets(ref_intervals,
+                       est_intervals,
+                       offset_ratio=0.2,
+                       offset_min_tolerance=0.05,
+                       strict=False):
     """Compute a maximum matching between reference and estimated notes, only
     taking note offsets into account.
 
@@ -230,8 +233,8 @@ def match_note_offsets(ref_intervals, est_intervals, offset_ratio=0.2,
         cmp_func = np.less_equal
 
     # check for offset matches
-    offset_distances = np.abs(np.subtract.outer(ref_intervals[:, 1],
-                                                est_intervals[:, 1]))
+    offset_distances = np.abs(
+        np.subtract.outer(ref_intervals[:, 1], est_intervals[:, 1]))
     # Round distances to a target precision to avoid the situation where
     # if the distance is exactly 50ms (and strict=False) it erroneously
     # doesn't match the notes because of precision issues.
@@ -239,8 +242,8 @@ def match_note_offsets(ref_intervals, est_intervals, offset_ratio=0.2,
     ref_durations = util.intervals_to_durations(ref_intervals)
     offset_tolerances = np.maximum(offset_ratio * ref_durations,
                                    offset_min_tolerance)
-    offset_hit_matrix = (
-        cmp_func(offset_distances, offset_tolerances.reshape(-1, 1)))
+    offset_hit_matrix = (cmp_func(offset_distances,
+                                  offset_tolerances.reshape(-1, 1)))
 
     # check for hits
     hits = np.where(offset_hit_matrix)
@@ -261,7 +264,9 @@ def match_note_offsets(ref_intervals, est_intervals, offset_ratio=0.2,
     return matching
 
 
-def match_note_onsets(ref_intervals, est_intervals, onset_tolerance=0.05,
+def match_note_onsets(ref_intervals,
+                      est_intervals,
+                      onset_tolerance=0.05,
                       strict=False):
     """Compute a maximum matching between reference and estimated notes, only
     taking note onsets into account.
@@ -307,8 +312,8 @@ def match_note_onsets(ref_intervals, est_intervals, onset_tolerance=0.05,
         cmp_func = np.less_equal
 
     # check for onset matches
-    onset_distances = np.abs(np.subtract.outer(ref_intervals[:, 0],
-                                               est_intervals[:, 0]))
+    onset_distances = np.abs(
+        np.subtract.outer(ref_intervals[:, 0], est_intervals[:, 0]))
     # Round distances to a target precision to avoid the situation where
     # if the distance is exactly 50ms (and strict=False) it erroneously
     # doesn't match the notes because of precision issues.
@@ -334,9 +339,15 @@ def match_note_onsets(ref_intervals, est_intervals, onset_tolerance=0.05,
     return matching
 
 
-def match_notes(ref_intervals, ref_pitches, est_intervals, est_pitches,
-                onset_tolerance=0.05, pitch_tolerance=50.0, offset_ratio=0.2,
-                offset_min_tolerance=0.05, strict=False):
+def match_notes(ref_intervals,
+                ref_pitches,
+                est_intervals,
+                est_pitches,
+                onset_tolerance=0.05,
+                pitch_tolerance=50.0,
+                offset_ratio=0.2,
+                offset_min_tolerance=0.05,
+                strict=False):
     """Compute a maximum matching between reference and estimated notes,
     subject to onset, pitch and (optionally) offset constraints.
 
@@ -415,8 +426,8 @@ def match_notes(ref_intervals, ref_pitches, est_intervals, est_pitches,
         cmp_func = np.less_equal
 
     # check for onset matches
-    onset_distances = np.abs(np.subtract.outer(ref_intervals[:, 0],
-                                               est_intervals[:, 0]))
+    onset_distances = np.abs(
+        np.subtract.outer(ref_intervals[:, 0], est_intervals[:, 0]))
     # Round distances to a target precision to avoid the situation where
     # if the distance is exactly 50ms (and strict=False) it erroneously
     # doesn't match the notes because of precision issues.
@@ -424,14 +435,14 @@ def match_notes(ref_intervals, ref_pitches, est_intervals, est_pitches,
     onset_hit_matrix = cmp_func(onset_distances, onset_tolerance)
 
     # check for pitch matches
-    pitch_distances = np.abs(1200*np.subtract.outer(np.log2(ref_pitches),
-                                                    np.log2(est_pitches)))
+    pitch_distances = np.abs(
+        1200 * np.subtract.outer(np.log2(ref_pitches), np.log2(est_pitches)))
     pitch_hit_matrix = cmp_func(pitch_distances, pitch_tolerance)
 
     # check for offset matches if offset_ratio is not None
     if offset_ratio is not None:
-        offset_distances = np.abs(np.subtract.outer(ref_intervals[:, 1],
-                                                    est_intervals[:, 1]))
+        offset_distances = np.abs(
+            np.subtract.outer(ref_intervals[:, 1], est_intervals[:, 1]))
         # Round distances to a target precision to avoid the situation where
         # if the distance is exactly 50ms (and strict=False) it erroneously
         # doesn't match the notes because of precision issues.
@@ -439,8 +450,8 @@ def match_notes(ref_intervals, ref_pitches, est_intervals, est_pitches,
         ref_durations = util.intervals_to_durations(ref_intervals)
         offset_tolerances = np.maximum(offset_ratio * ref_durations,
                                        offset_min_tolerance)
-        offset_hit_matrix = (
-            cmp_func(offset_distances, offset_tolerances.reshape(-1, 1)))
+        offset_hit_matrix = (cmp_func(offset_distances,
+                                      offset_tolerances.reshape(-1, 1)))
     else:
         offset_hit_matrix = True
 
@@ -464,10 +475,15 @@ def match_notes(ref_intervals, ref_pitches, est_intervals, est_pitches,
     return matching
 
 
-def precision_recall_f1_overlap(ref_intervals, ref_pitches, est_intervals,
-                                est_pitches, onset_tolerance=0.05,
-                                pitch_tolerance=50.0, offset_ratio=0.2,
-                                offset_min_tolerance=0.05, strict=False,
+def precision_recall_f1_overlap(ref_intervals,
+                                ref_pitches,
+                                est_intervals,
+                                est_pitches,
+                                onset_tolerance=0.05,
+                                pitch_tolerance=50.0,
+                                offset_ratio=0.2,
+                                offset_min_tolerance=0.05,
+                                strict=False,
                                 beta=1.0):
     """Compute the Precision, Recall and F-measure of correct vs incorrectly
     transcribed notes, and the Average Overlap Ratio for correctly transcribed
@@ -551,15 +567,18 @@ def precision_recall_f1_overlap(ref_intervals, ref_pitches, est_intervals,
     if len(ref_pitches) == 0 or len(est_pitches) == 0:
         return 0., 0., 0., 0.
 
-    matching = match_notes(ref_intervals, ref_pitches, est_intervals,
-                           est_pitches, onset_tolerance=onset_tolerance,
+    matching = match_notes(ref_intervals,
+                           ref_pitches,
+                           est_intervals,
+                           est_pitches,
+                           onset_tolerance=onset_tolerance,
                            pitch_tolerance=pitch_tolerance,
                            offset_ratio=offset_ratio,
                            offset_min_tolerance=offset_min_tolerance,
                            strict=strict)
 
-    precision = float(len(matching))/len(est_pitches)
-    recall = float(len(matching))/len(ref_pitches)
+    precision = float(len(matching)) / len(est_pitches)
+    recall = float(len(matching)) / len(ref_pitches)
     f_measure = util.f_measure(precision, recall, beta=beta)
 
     avg_overlap_ratio = average_overlap_ratio(ref_intervals, est_intervals,
@@ -620,8 +639,11 @@ def average_overlap_ratio(ref_intervals, est_intervals, matching):
         return np.mean(ratios)
 
 
-def onset_precision_recall_f1(ref_intervals, est_intervals,
-                              onset_tolerance=0.05, strict=False, beta=1.0):
+def onset_precision_recall_f1(ref_intervals,
+                              est_intervals,
+                              onset_tolerance=0.05,
+                              strict=False,
+                              beta=1.0):
     """Compute the Precision, Recall and F-measure of note onsets: an estimated
     onset is considered correct if it is within +-50ms of a reference onset.
     Note that this metric completely ignores note offset and note pitch. This
@@ -672,18 +694,22 @@ def onset_precision_recall_f1(ref_intervals, est_intervals,
     if len(ref_intervals) == 0 or len(est_intervals) == 0:
         return 0., 0., 0.
 
-    matching = match_note_onsets(ref_intervals, est_intervals,
+    matching = match_note_onsets(ref_intervals,
+                                 est_intervals,
                                  onset_tolerance=onset_tolerance,
                                  strict=strict)
 
-    onset_precision = float(len(matching))/len(est_intervals)
-    onset_recall = float(len(matching))/len(ref_intervals)
+    onset_precision = float(len(matching)) / len(est_intervals)
+    onset_recall = float(len(matching)) / len(ref_intervals)
     onset_f_measure = util.f_measure(onset_precision, onset_recall, beta=beta)
     return onset_precision, onset_recall, onset_f_measure
 
 
-def offset_precision_recall_f1(ref_intervals, est_intervals, offset_ratio=0.2,
-                               offset_min_tolerance=0.05, strict=False,
+def offset_precision_recall_f1(ref_intervals,
+                               est_intervals,
+                               offset_ratio=0.2,
+                               offset_min_tolerance=0.05,
+                               strict=False,
                                beta=1.0):
     """Compute the Precision, Recall and F-measure of note offsets: an
     estimated offset is considered correct if it is within +-50ms (or 20% of
@@ -743,14 +769,16 @@ def offset_precision_recall_f1(ref_intervals, est_intervals, offset_ratio=0.2,
     if len(ref_intervals) == 0 or len(est_intervals) == 0:
         return 0., 0., 0.
 
-    matching = match_note_offsets(ref_intervals, est_intervals,
+    matching = match_note_offsets(ref_intervals,
+                                  est_intervals,
                                   offset_ratio=offset_ratio,
                                   offset_min_tolerance=offset_min_tolerance,
                                   strict=strict)
 
-    offset_precision = float(len(matching))/len(est_intervals)
-    offset_recall = float(len(matching))/len(ref_intervals)
-    offset_f_measure = util.f_measure(offset_precision, offset_recall,
+    offset_precision = float(len(matching)) / len(est_intervals)
+    offset_recall = float(len(matching)) / len(ref_intervals)
+    offset_f_measure = util.f_measure(offset_precision,
+                                      offset_recall,
                                       beta=beta)
     return offset_precision, offset_recall, offset_f_measure
 
@@ -794,37 +822,30 @@ def evaluate(ref_intervals, ref_pitches, est_intervals, est_pitches, **kwargs):
     kwargs.setdefault('offset_ratio', 0.2)
     orig_offset_ratio = kwargs['offset_ratio']
     if kwargs['offset_ratio'] is not None:
-        (scores['Precision'],
-         scores['Recall'],
-         scores['F-measure'],
+        (scores['Precision'], scores['Recall'], scores['F-measure'],
          scores['Average_Overlap_Ratio']) = util.filter_kwargs(
-            precision_recall_f1_overlap, ref_intervals, ref_pitches,
-            est_intervals, est_pitches, **kwargs)
+             precision_recall_f1_overlap, ref_intervals, ref_pitches,
+             est_intervals, est_pitches, **kwargs)
 
     # Precision, recall and f-measure NOT taking note offsets into account
     kwargs['offset_ratio'] = None
-    (scores['Precision_no_offset'],
-     scores['Recall_no_offset'],
+    (scores['Precision_no_offset'], scores['Recall_no_offset'],
      scores['F-measure_no_offset'],
-     scores['Average_Overlap_Ratio_no_offset']) = (
-        util.filter_kwargs(precision_recall_f1_overlap,
-                           ref_intervals, ref_pitches,
-                           est_intervals, est_pitches, **kwargs))
+     scores['Average_Overlap_Ratio_no_offset']) = (util.filter_kwargs(
+         precision_recall_f1_overlap, ref_intervals, ref_pitches,
+         est_intervals, est_pitches, **kwargs))
 
     # onset-only metrics
-    (scores['Onset_Precision'],
-     scores['Onset_Recall'],
-     scores['Onset_F-measure']) = (
-        util.filter_kwargs(onset_precision_recall_f1,
-                           ref_intervals, est_intervals, **kwargs))
+    (scores['Onset_Precision'], scores['Onset_Recall'],
+     scores['Onset_F-measure']) = (util.filter_kwargs(
+         onset_precision_recall_f1, ref_intervals, est_intervals, **kwargs))
 
     # offset-only metrics
     kwargs['offset_ratio'] = orig_offset_ratio
     if kwargs['offset_ratio'] is not None:
-        (scores['Offset_Precision'],
-         scores['Offset_Recall'],
-         scores['Offset_F-measure']) = (
-            util.filter_kwargs(offset_precision_recall_f1,
-                               ref_intervals, est_intervals, **kwargs))
+        (scores['Offset_Precision'], scores['Offset_Recall'],
+         scores['Offset_F-measure']) = (util.filter_kwargs(
+             offset_precision_recall_f1, ref_intervals, est_intervals,
+             **kwargs))
 
     return scores

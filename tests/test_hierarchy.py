@@ -24,7 +24,8 @@ def test_tmeasure_pass():
 
     def __test(window, frame_size):
         # The estimate should get 0 score here
-        scores = mir_eval.hierarchy.tmeasure(ref, est,
+        scores = mir_eval.hierarchy.tmeasure(ref,
+                                             est,
                                              window=window,
                                              frame_size=frame_size)
 
@@ -32,7 +33,8 @@ def test_tmeasure_pass():
             assert k == 0.0
 
         # The reference should get a perfect score here
-        scores = mir_eval.hierarchy.tmeasure(ref, ref,
+        scores = mir_eval.hierarchy.tmeasure(ref,
+                                             ref,
                                              window=window,
                                              frame_size=frame_size)
 
@@ -47,9 +49,7 @@ def test_tmeasure_pass():
 def test_tmeasure_warning():
 
     # Warn if there are missing boundaries from one layer to the next
-    ref = [[[0, 5],
-            [5, 10]],
-           [[0, 10]]]
+    ref = [[[0, 5], [5, 10]], [[0, 10]]]
 
     ref = [np.asarray(_) for _ in ref]
 
@@ -67,45 +67,36 @@ def test_tmeasure_warning():
 def test_tmeasure_fail_span():
 
     # Does not start at 0
-    ref = [[[1, 10]],
-           [[1, 5],
-            [5, 10]]]
+    ref = [[[1, 10]], [[1, 5], [5, 10]]]
 
     ref = [np.asarray(_) for _ in ref]
 
     yield raises(ValueError)(mir_eval.hierarchy.tmeasure), ref, ref
 
     # Does not end at the right time
-    ref = [[[0, 5]],
-           [[0, 5],
-            [5, 6]]]
+    ref = [[[0, 5]], [[0, 5], [5, 6]]]
     ref = [np.asarray(_) for _ in ref]
 
     yield raises(ValueError)(mir_eval.hierarchy.tmeasure), ref, ref
 
     # Two annotaions of different shape
-    ref = [[[0, 10]],
-           [[0, 5],
-            [5, 10]]]
+    ref = [[[0, 10]], [[0, 5], [5, 10]]]
     ref = [np.asarray(_) for _ in ref]
 
-    est = [[[0, 15]],
-           [[0, 5],
-            [5, 15]]]
+    est = [[[0, 15]], [[0, 5], [5, 15]]]
     est = [np.asarray(_) for _ in est]
 
     yield raises(ValueError)(mir_eval.hierarchy.tmeasure), ref, est
 
 
 def test_tmeasure_fail_frame_size():
-    ref = [[[0, 60]],
-           [[0, 30],
-            [30, 60]]]
+    ref = [[[0, 60]], [[0, 30], [30, 60]]]
     ref = [np.asarray(_) for _ in ref]
 
     @raises(ValueError)
     def __test(window, frame_size):
-        mir_eval.hierarchy.tmeasure(ref, ref,
+        mir_eval.hierarchy.tmeasure(ref,
+                                    ref,
                                     window=window,
                                     frame_size=frame_size)
 
@@ -130,14 +121,20 @@ def test_lmeasure_pass():
 
     def __test(frame_size):
         # The estimate should get 0 score here
-        scores = mir_eval.hierarchy.lmeasure(ref, ref_lab, est, est_lab,
+        scores = mir_eval.hierarchy.lmeasure(ref,
+                                             ref_lab,
+                                             est,
+                                             est_lab,
                                              frame_size=frame_size)
 
         for k in scores:
             assert k == 0.0
 
         # The reference should get a perfect score here
-        scores = mir_eval.hierarchy.lmeasure(ref, ref_lab, ref, ref_lab,
+        scores = mir_eval.hierarchy.lmeasure(ref,
+                                             ref_lab,
+                                             ref,
+                                             ref_lab,
                                              frame_size=frame_size)
 
         for k in scores:
@@ -150,9 +147,7 @@ def test_lmeasure_pass():
 def test_lmeasure_warning():
 
     # Warn if there are missing boundaries from one layer to the next
-    ref = [[[0, 5],
-            [5, 10]],
-           [[0, 10]]]
+    ref = [[[0, 5], [5, 10]], [[0, 10]]]
 
     ref = [np.asarray(_) for _ in ref]
     ref_lab = [['a', 'b'], ['A']]
@@ -171,51 +166,44 @@ def test_lmeasure_warning():
 def test_lmeasure_fail_span():
 
     # Does not start at 0
-    ref = [[[1, 10]],
-           [[1, 5],
-            [5, 10]]]
+    ref = [[[1, 10]], [[1, 5], [5, 10]]]
 
     ref_lab = [['A'], ['a', 'b']]
 
     ref = [np.asarray(_) for _ in ref]
 
-    yield (raises(ValueError)(mir_eval.hierarchy.lmeasure),
-           ref, ref_lab, ref, ref_lab)
+    yield (raises(ValueError)(mir_eval.hierarchy.lmeasure), ref, ref_lab, ref,
+           ref_lab)
 
     # Does not end at the right time
-    ref = [[[0, 5]],
-           [[0, 5],
-            [5, 6]]]
+    ref = [[[0, 5]], [[0, 5], [5, 6]]]
     ref = [np.asarray(_) for _ in ref]
 
-    yield (raises(ValueError)(mir_eval.hierarchy.lmeasure),
-           ref, ref_lab, ref, ref_lab)
+    yield (raises(ValueError)(mir_eval.hierarchy.lmeasure), ref, ref_lab, ref,
+           ref_lab)
 
     # Two annotations of different shape
-    ref = [[[0, 10]],
-           [[0, 5],
-            [5, 10]]]
+    ref = [[[0, 10]], [[0, 5], [5, 10]]]
     ref = [np.asarray(_) for _ in ref]
 
-    est = [[[0, 15]],
-           [[0, 5],
-            [5, 15]]]
+    est = [[[0, 15]], [[0, 5], [5, 15]]]
     est = [np.asarray(_) for _ in est]
 
-    yield (raises(ValueError)(mir_eval.hierarchy.lmeasure),
-           ref, ref_lab, est, ref_lab)
+    yield (raises(ValueError)(mir_eval.hierarchy.lmeasure), ref, ref_lab, est,
+           ref_lab)
 
 
 def test_lmeasure_fail_frame_size():
-    ref = [[[0, 60]],
-           [[0, 30],
-            [30, 60]]]
+    ref = [[[0, 60]], [[0, 30], [30, 60]]]
     ref = [np.asarray(_) for _ in ref]
     ref_lab = [['A'], ['a', 'b']]
 
     @raises(ValueError)
     def __test(frame_size):
-        mir_eval.hierarchy.lmeasure(ref, ref_lab, ref, ref_lab,
+        mir_eval.hierarchy.lmeasure(ref,
+                                    ref_lab,
+                                    ref,
+                                    ref_lab,
                                     frame_size=frame_size)
 
     for frame_size in [-1, 0]:
@@ -237,8 +225,10 @@ def test_hierarchy_regression():
     est_labs = [seg[1] for seg in est_hier]
 
     def __test(w, ref_i, ref_l, est_i, est_l, target):
-        outputs = mir_eval.hierarchy.evaluate(ref_i, ref_l,
-                                              est_i, est_l,
+        outputs = mir_eval.hierarchy.evaluate(ref_i,
+                                              ref_l,
+                                              est_i,
+                                              est_l,
                                               window=w)
 
         for key in target:
@@ -294,26 +284,26 @@ def test_count_inversions():
 def test_meet():
 
     frame_size = 1
-    int_hier = [np.array([[0, 10]]),
-                np.array([[0, 6], [6, 10]]),
-                np.array([[0, 2], [2, 4], [4, 6], [6, 8], [8, 10]])]
+    int_hier = [
+        np.array([[0, 10]]),
+        np.array([[0, 6], [6, 10]]),
+        np.array([[0, 2], [2, 4], [4, 6], [6, 8], [8, 10]])
+    ]
 
-    lab_hier = [['X'],
-                ['A', 'B'],
-                ['a', 'b', 'a', 'c', 'b']]
+    lab_hier = [['X'], ['A', 'B'], ['a', 'b', 'a', 'c', 'b']]
 
     # Target output
     meet_truth = np.asarray([
-        [3, 3, 2, 2, 3, 3, 1, 1, 1, 1],   # (XAa)
-        [3, 3, 2, 2, 3, 3, 1, 1, 1, 1],   # (XAa)
-        [2, 2, 3, 3, 2, 2, 1, 1, 3, 3],   # (XAb)
-        [2, 2, 3, 3, 2, 2, 1, 1, 3, 3],   # (XAb)
-        [3, 3, 2, 2, 3, 3, 1, 1, 1, 1],   # (XAa)
-        [3, 3, 2, 2, 3, 3, 1, 1, 1, 1],   # (XAa)
-        [1, 1, 1, 1, 1, 1, 3, 3, 2, 2],   # (XBc)
-        [1, 1, 1, 1, 1, 1, 3, 3, 2, 2],   # (XBc)
-        [1, 1, 3, 3, 1, 1, 2, 2, 3, 3],   # (XBb)
-        [1, 1, 3, 3, 1, 1, 2, 2, 3, 3],   # (XBb)
+        [3, 3, 2, 2, 3, 3, 1, 1, 1, 1],  # (XAa)
+        [3, 3, 2, 2, 3, 3, 1, 1, 1, 1],  # (XAa)
+        [2, 2, 3, 3, 2, 2, 1, 1, 3, 3],  # (XAb)
+        [2, 2, 3, 3, 2, 2, 1, 1, 3, 3],  # (XAb)
+        [3, 3, 2, 2, 3, 3, 1, 1, 1, 1],  # (XAa)
+        [3, 3, 2, 2, 3, 3, 1, 1, 1, 1],  # (XAa)
+        [1, 1, 1, 1, 1, 1, 3, 3, 2, 2],  # (XBc)
+        [1, 1, 1, 1, 1, 1, 3, 3, 2, 2],  # (XBc)
+        [1, 1, 3, 3, 1, 1, 2, 2, 3, 3],  # (XBb)
+        [1, 1, 3, 3, 1, 1, 2, 2, 3, 3],  # (XBb)
     ])
     meet = mir_eval.hierarchy._meet(int_hier, lab_hier, frame_size)
 
@@ -341,12 +331,14 @@ def test_compare_frame_rankings():
 
     # Just count the normalizers
     # No self-inversions are possible from ref to itself
-    inv, norm = mir_eval.hierarchy._compare_frame_rankings(ref, ref,
+    inv, norm = mir_eval.hierarchy._compare_frame_rankings(ref,
+                                                           ref,
                                                            transitive=True)
     assert inv == 0
     assert norm == 5.0
 
-    inv, norm = mir_eval.hierarchy._compare_frame_rankings(ref, ref,
+    inv, norm = mir_eval.hierarchy._compare_frame_rankings(ref,
+                                                           ref,
                                                            transitive=False)
     assert inv == 0
     assert norm == 3.0
@@ -354,21 +346,24 @@ def test_compare_frame_rankings():
     est = np.asarray([1, 2, 1, 3])
     # In the transitive case, we lose two pairs
     # (1, 3) and (2, 2) -> (1, 1), (2, 1)
-    inv, norm = mir_eval.hierarchy._compare_frame_rankings(ref, est,
+    inv, norm = mir_eval.hierarchy._compare_frame_rankings(ref,
+                                                           est,
                                                            transitive=True)
     assert inv == 2
     assert norm == 5.0
 
     # In the non-transitive case, we only lose one pair
     # because (1,3) was not counted
-    inv, norm = mir_eval.hierarchy._compare_frame_rankings(ref, est,
+    inv, norm = mir_eval.hierarchy._compare_frame_rankings(ref,
+                                                           est,
                                                            transitive=False)
     assert inv == 1
     assert norm == 3.0
 
     # Do an all-zeros test
     ref = np.asarray([1, 1, 1, 1])
-    inv, norm = mir_eval.hierarchy._compare_frame_rankings(ref, ref,
+    inv, norm = mir_eval.hierarchy._compare_frame_rankings(ref,
+                                                           ref,
                                                            transitive=True)
     assert inv == 0
     assert norm == 0.0

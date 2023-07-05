@@ -135,7 +135,7 @@ def detection(reference_tempi, reference_weight, estimated_tempi, tol=0.08):
             # Count the hits
             hits[i] = relative_error <= tol
 
-    p_score = reference_weight * hits[0] + (1.0-reference_weight) * hits[1]
+    p_score = reference_weight * hits[0] + (1.0 - reference_weight) * hits[1]
 
     one_correct = bool(np.max(hits))
     both_correct = bool(np.min(hits))
@@ -171,11 +171,9 @@ def evaluate(reference_tempi, reference_weight, estimated_tempi, **kwargs):
     # Compute all metrics
     scores = collections.OrderedDict()
 
-    (scores['P-score'],
-     scores['One-correct'],
+    (scores['P-score'], scores['One-correct'],
      scores['Both-correct']) = util.filter_kwargs(detection, reference_tempi,
                                                   reference_weight,
-                                                  estimated_tempi,
-                                                  **kwargs)
+                                                  estimated_tempi, **kwargs)
 
     return scores
