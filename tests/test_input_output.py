@@ -1,4 +1,4 @@
-""" Unit tests for input/output functions """
+"""Unit tests for input/output functions."""
 
 import tempfile
 import warnings

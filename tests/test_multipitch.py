@@ -1,6 +1,4 @@
-"""
-Unit tests for mir_eval.multipitch
-"""
+"""Unit tests for mir_eval.multipitch."""
 
 import glob
 import json

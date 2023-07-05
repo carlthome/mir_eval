@@ -1,7 +1,5 @@
 #!/usr/bin/env python
-'''
-Unit tests for mir_eval.tempo
-'''
+"""Unit tests for mir_eval.tempo."""
 import glob
 import json
 import warnings

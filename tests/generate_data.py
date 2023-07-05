@@ -31,10 +31,10 @@ import mir_eval
 
 
 def load_separation_data(folder):
-    '''
-    Loads in a stacked matrix of the .wavs in the provided folder.
+    """Loads in a stacked matrix of the .wavs in the provided folder.
+
     We need this because there's no specialized loader in .io for it.
-    '''
+    """
     data = []
     global_fs = None
     # Load in each reference file in the supplied dir

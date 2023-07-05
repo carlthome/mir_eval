@@ -1,5 +1,4 @@
-'''
-The goal of multiple f0 (multipitch) estimation and tracking is to identify
+"""The goal of multiple f0 (multipitch) estimation and tracking is to identify
 all of the active fundamental frequencies in each time frame in a complex music
 signal.
 
@@ -40,7 +39,7 @@ References
    Signal Processing, 2007(1):154-163, Jan. 2007.
 .. [#bay2009] Bay, M., Ehmann, A. F., & Downie, J. S. (2009). Evaluation of
    Multiple-F0 Estimation and Tracking Systems. In ISMIR (pp. 315-320).
-'''
+"""
 
 import collections
 import warnings
@@ -68,7 +67,6 @@ def validate(ref_time, ref_freqs, est_time, est_freqs):
         estimate time stamps in seconds
     est_freqs : list of np.ndarray
         estimated frequencies in Hz
-
     """
 
     util.validate_events(ref_time, max_time=MAX_TIME)
@@ -181,7 +179,6 @@ def midi_to_chroma(frequencies_midi):
     -------
     frequencies_chroma : list of np.ndarray
         Midi values wrapped to one octave.
-
     """
     return [np.mod(freqs, 12) for freqs in frequencies_midi]
 
@@ -203,9 +200,9 @@ def compute_num_freqs(frequencies):
 
 
 def compute_num_true_positives(ref_freqs, est_freqs, window=0.5, chroma=False):
-    """Compute the number of true positives in an estimate given a reference.
-    A frequency is correct if it is within a quartertone of the
-    correct frequency.
+    """Compute the number of true positives in an estimate given a reference. A
+    frequency is correct if it is within a quartertone of the correct
+    frequency.
 
     Parameters
     ----------
@@ -224,7 +221,6 @@ def compute_num_true_positives(ref_freqs, est_freqs, window=0.5, chroma=False):
     true_positives : np.ndarray
         Array the same length as ref_freqs containing the number of true
         positives.
-
     """
     n_frames = len(ref_freqs)
     true_positives = np.zeros((n_frames, ))
@@ -265,7 +261,6 @@ def compute_accuracy(true_positives, n_ref, n_est):
         ``sum(true_positives)/sum(n_ref)``
     acc : float
         ``sum(true_positives)/sum(n_est + n_ref - true_positives)``
-
     """
     true_positive_sum = float(true_positives.sum())
 
@@ -315,7 +310,6 @@ def compute_err_score(true_positives, n_ref, n_est):
         False alarm error
     e_tot : float
         Total error
-
     """
     n_ref_sum = float(n_ref.sum())
 
@@ -345,9 +339,9 @@ def compute_err_score(true_positives, n_ref, n_est):
 
 
 def metrics(ref_time, ref_freqs, est_time, est_freqs, **kwargs):
-    """Compute multipitch metrics. All metrics are computed at the 'macro' level
-    such that the frame true positive/false positive/false negative rates are
-    summed across time and the metrics are computed on the combined values.
+    """Compute multipitch metrics. All metrics are computed at the 'macro'
+    level such that the frame true positive/false positive/false negative rates
+    are summed across time and the metrics are computed on the combined values.
 
     Examples
     --------
@@ -402,7 +396,6 @@ def metrics(ref_time, ref_freqs, est_time, est_freqs, **kwargs):
         Chroma false alarm error
     e_tot_chroma : float
         Chroma total error
-
     """
     validate(ref_time, ref_freqs, est_time, est_freqs)
 
@@ -485,7 +478,6 @@ def evaluate(ref_time, ref_freqs, est_time, est_freqs, **kwargs):
     scores : dict
         Dictionary of scores, where the key is the metric name (str) and
         the value is the (float) score achieved.
-
     """
     scores = collections.OrderedDict()
 

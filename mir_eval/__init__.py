@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Top-level module for mir_eval"""
+"""Top-level module for mir_eval."""
 
 # Import all submodules (for each task)
 from . import (alignment, beat, chord, hierarchy, io, key, melody, multipitch,

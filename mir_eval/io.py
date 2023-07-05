@@ -1,6 +1,4 @@
-"""
-Functions for loading in annotations from files in different formats.
-"""
+"""Functions for loading in annotations from files in different formats."""
 
 import contextlib
 import re
@@ -14,14 +12,14 @@ from . import key, tempo, util
 
 @contextlib.contextmanager
 def _open(file_or_str, **kwargs):
-    '''Either open a file handle, or use an existing file-like object.
+    """Either open a file handle, or use an existing file-like object.
 
     This will behave as the `open` function if `file_or_str` is a string.
 
     If `file_or_str` has the `read` attribute, it will return `file_or_str`.
 
     Otherwise, an `IOError` is raised.
-    '''
+    """
     if hasattr(file_or_str, 'read'):
         yield file_or_str
     elif isinstance(file_or_str, str):
@@ -32,9 +30,9 @@ def _open(file_or_str, **kwargs):
 
 
 def load_delimited(filename, converters, delimiter=r'\s+', comment='#'):
-    r"""Utility function for loading in data from an annotation file where columns
-    are delimited.  The number of columns is inferred from the length of
-    the provided converters list.
+    r"""Utility function for loading in data from an annotation file where
+    columns are delimited.  The number of columns is inferred from the length
+    of the provided converters list.
 
     Examples
     --------
@@ -64,7 +62,6 @@ def load_delimited(filename, converters, delimiter=r'\s+', comment='#'):
     columns : tuple of lists
         Each list in this tuple corresponds to values in one of the columns
         in the file.
-
     """
     # Initialize list of empty lists
     n_columns = len(converters)
@@ -141,7 +138,6 @@ def load_events(filename, delimiter=r'\s+', comment='#'):
     -------
     event_times : np.ndarray
         array of event times (float)
-
     """
     # Use our universal function to load in the events
     events = load_delimited(filename, [float],
@@ -157,11 +153,12 @@ def load_events(filename, delimiter=r'\s+', comment='#'):
 
 
 def load_labeled_events(filename, delimiter=r'\s+', comment='#'):
-    r"""Import labeled time-stamp events from an annotation file.  The file should
-    consist of two columns; the first having numeric values corresponding to
-    the event times and the second having string labels for each event.  This
-    is primarily useful for processing labeled events which lack duration, such
-    as beats with metric beat number or onsets with an instrument label.
+    r"""Import labeled time-stamp events from an annotation file.  The file
+    should consist of two columns; the first having numeric values
+    corresponding to the event times and the second having string labels for
+    each event.  This is primarily useful for processing labeled events which
+    lack duration, such as beats with metric beat number or onsets with an
+    instrument label.
 
     Parameters
     ----------
@@ -182,7 +179,6 @@ def load_labeled_events(filename, delimiter=r'\s+', comment='#'):
         array of event times (float)
     labels : list of str
         list of labels
-
     """
     # Use our universal function to load in the events
     events, labels = load_delimited(filename, [float, str],
@@ -199,8 +195,8 @@ def load_labeled_events(filename, delimiter=r'\s+', comment='#'):
 
 
 def load_intervals(filename, delimiter=r'\s+', comment='#'):
-    r"""Import intervals from an annotation file.  The file should consist of two
-    columns of numeric values corresponding to start and end time of each
+    r"""Import intervals from an annotation file.  The file should consist of
+    two columns of numeric values corresponding to start and end time of each
     interval.  This is primarily useful for processing events which span a
     duration, such as segmentation, chords, or instrument activation.
 
@@ -221,7 +217,6 @@ def load_intervals(filename, delimiter=r'\s+', comment='#'):
     -------
     intervals : np.ndarray, shape=(n_events, 2)
         array of event start and end times
-
     """
     # Use our universal function to load in the events
     starts, ends = load_delimited(filename, [float, float],
@@ -282,9 +277,9 @@ def load_labeled_intervals(filename, delimiter=r'\s+', comment='#'):
 
 
 def load_time_series(filename, delimiter=r'\s+', comment='#'):
-    r"""Import a time series from an annotation file.  The file should consist of
-    two columns of numeric values corresponding to the time and value of each
-    sample of the time series.
+    r"""Import a time series from an annotation file.  The file should consist
+    of two columns of numeric values corresponding to the time and value of
+    each sample of the time series.
 
     Parameters
     ----------
@@ -305,7 +300,6 @@ def load_time_series(filename, delimiter=r'\s+', comment='#'):
         array of timestamps (float)
     values : np.ndarray
         array of corresponding numeric values (float)
-
     """
     # Use our universal function to load in the events
     times, values = load_delimited(filename, [float, float],
@@ -318,9 +312,9 @@ def load_time_series(filename, delimiter=r'\s+', comment='#'):
 
 
 def load_patterns(filename):
-    """Loads the patters contained in the filename and puts them into a list
-    of patterns, each pattern being a list of occurrence, and each
-    occurrence being a list of (onset, midi) pairs.
+    """Loads the patters contained in the filename and puts them into a list of
+    patterns, each pattern being a list of occurrence, and each occurrence
+    being a list of (onset, midi) pairs.
 
     The input file must be formatted as described in MIREX 2013:
     http://www.music-ir.org/mirex/wiki/2013:Discovery_of_Repeated_Themes_%26_Sections
@@ -359,7 +353,6 @@ def load_patterns(filename):
             pattern2 = [occ1, occ2]
 
             pattern_list = [pattern1, pattern2]
-
     """
 
     # List with all the patterns
@@ -577,9 +570,9 @@ def load_tempo(filename, delimiter=r'\s+', comment='#'):
 def load_ragged_time_series(filename, dtype=float, delimiter=r'\s+',
                             header=False, comment='#'):
     r"""Utility function for loading in data from a delimited time series
-    annotation file with a variable number of columns.
-    Assumes that column 0 contains time stamps and columns 1 through n contain
-    values. n may be variable from time stamp to time stamp.
+    annotation file with a variable number of columns. Assumes that column 0
+    contains time stamps and columns 1 through n contain values. n may be
+    variable from time stamp to time stamp.
 
     Examples
     --------
@@ -614,7 +607,6 @@ def load_ragged_time_series(filename, dtype=float, delimiter=r'\s+',
         array of timestamps (float)
     values : list of np.ndarray
         list of arrays of corresponding values
-
     """
     # Initialize empty lists
     times = []

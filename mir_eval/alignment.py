@@ -1,11 +1,10 @@
-"""
-Alignment models are given a sequence of events along with a piece of audio, and then return a
-sequence of timestamps, with one timestamp for each event, indicating the position of this event
-in the audio. The events are listed in order of occurrence in the audio, so that output
-timestamps have to be monotonically increasing.
-Evaluation usually involves taking the series of predicted and ground truth timestamps and
-comparing their distance, usually on a pair-wise basis, e.g. taking the median absolute error in
-seconds.
+"""Alignment models are given a sequence of events along with a piece of audio,
+and then return a sequence of timestamps, with one timestamp for each event,
+indicating the position of this event in the audio. The events are listed in
+order of occurrence in the audio, so that output timestamps have to be
+monotonically increasing. Evaluation usually involves taking the series of
+predicted and ground truth timestamps and comparing their distance, usually on
+a pair-wise basis, e.g. taking the median absolute error in seconds.
 
 Conventions
 -----------
@@ -44,7 +43,6 @@ References
   .. [#fujihara2011] H. Fujihara, M. Goto, J. Ogata, H. Okuno.
     "LyricSynchronizer: Automatic synchronization system between musical audio signals and lyrics",
     IEEE Journal of Selected Topics in Signal Processing, VOL. 5, NO. 6, 2011
-
 """
 
 import collections
@@ -119,8 +117,8 @@ def validate(
 
 
 def absolute_error(reference_timestamps, estimated_timestamps):
-    """Compute the absolute deviations between estimated and reference timestamps,
-    and then returns the median and average over all events
+    """Compute the absolute deviations between estimated and reference
+    timestamps, and then returns the median and average over all events.
 
     Examples
     --------
@@ -148,9 +146,9 @@ def absolute_error(reference_timestamps, estimated_timestamps):
 
 
 def percentage_correct(reference_timestamps, estimated_timestamps, window=0.3):
-    """Compute the percentage of correctly predicted timestamps. A timestamp is predicted
-    correctly if its position doesn't deviate more than the window parameter from the ground
-    truth timestamp.
+    """Compute the percentage of correctly predicted timestamps. A timestamp is
+    predicted correctly if its position doesn't deviate more than the window
+    parameter from the ground truth timestamp.
 
     Examples
     --------
@@ -317,6 +315,7 @@ def karaoke_perceptual_metric(reference_timestamps, estimated_timestamps):
 
 def evaluate(reference_timestamps, estimated_timestamps, **kwargs):
     """Compute all metrics for the given reference and estimated annotations.
+
     Examples
     --------
     >>> reference_timestamps = mir_eval.io.load_events('reference.txt')

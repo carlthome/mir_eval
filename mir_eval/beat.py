@@ -1,7 +1,6 @@
-'''
-The aim of a beat detection algorithm is to report the times at which a typical
-human listener might tap their foot to a piece of music. As a result, most
-metrics for evaluating the performance of beat tracking systems involve
+"""The aim of a beat detection algorithm is to report the times at which a
+typical human listener might tap their foot to a piece of music. As a result,
+most metrics for evaluating the performance of beat tracking systems involve
 computing the error between the estimated beat times and some reference list of
 beat locations. Many metrics additionally compare the beat sequences at
 different metric levels in order to deal with the ambiguity of tempo.
@@ -41,8 +40,7 @@ Metrics
   proportion of the beat sequence which is continuously correct
 * :func:`mir_eval.beat.information_gain`: The Information Gain of a normalized
   beat error histogram over a uniform distribution
-
-'''
+"""
 
 import collections
 import warnings
@@ -97,7 +95,7 @@ def validate(reference_beats, estimated_beats):
 
 
 def _get_reference_beat_variations(reference_beats):
-    """Return metric variations of the reference beats
+    """Return metric variations of the reference beats.
 
     Parameters
     ----------
@@ -116,7 +114,6 @@ def _get_reference_beat_variations(reference_beats):
         Half tempo, odd beats
     half_even : np.ndarray
         Half tempo, even beats
-
     """
 
     # Create annotations at twice the metric level
@@ -163,7 +160,6 @@ def f_measure(reference_beats,
     -------
     f_score : float
         The computed F-measure score
-
     """
     validate(reference_beats, estimated_beats)
     # When estimated beats are empty, no beats are correct; metric is 0
@@ -240,7 +236,7 @@ def goto(reference_beats,
          goto_mu=0.2,
          goto_sigma=0.2):
     """Calculate Goto's score, a binary 1 or 0 depending on some specific
-    heuristic criteria
+    heuristic criteria.
 
     Examples
     --------
@@ -339,8 +335,8 @@ def goto(reference_beats,
 def p_score(reference_beats,
             estimated_beats,
             p_score_threshold=0.2):
-    """Get McKinney's P-score.
-    Based on the autocorrelation of the reference and estimated beats
+    """Get McKinney's P-score. Based on the autocorrelation of the reference
+    and estimated beats.
 
     Examples
     --------
@@ -365,7 +361,6 @@ def p_score(reference_beats,
     -------
     correlation : float
         McKinney's P-score
-
     """
     validate(reference_beats, estimated_beats)
     # Warn when only one beat is provided for either estimated or reference,
@@ -726,7 +721,6 @@ def evaluate(reference_beats, estimated_beats, **kwargs):
     scores : dict
         Dictionary of scores, where the key is the metric name (str) and
         the value is the (float) score achieved.
-
     """
 
     # Trim beat times at the beginning of the annotations

@@ -1,6 +1,4 @@
-'''
-Unit tests for mir_eval.hierarchy
-'''
+"""Unit tests for mir_eval.hierarchy."""
 
 import json
 import re

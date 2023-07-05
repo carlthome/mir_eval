@@ -1,13 +1,12 @@
-r'''
-Chord estimation algorithms produce a list of intervals and labels which denote
-the chord being played over each timespan.  They are evaluated by comparing the
-estimated chord labels to some reference, usually using a mapping to a chord
-subalphabet (e.g. minor and major chords only, all triads, etc.).  There is no
-single 'right' way to compare two sequences of chord labels.  Embracing this
-reality, every conventional comparison rule is provided.  Comparisons are made
-over the different components of each chord (e.g. G:maj(6)/5): the root (G),
-the root-invariant active semitones as determined by the quality
-shorthand (maj) and scale degrees (6), and the bass interval (5).
+r"""Chord estimation algorithms produce a list of intervals and labels which
+denote the chord being played over each timespan.  They are evaluated by
+comparing the estimated chord labels to some reference, usually using a mapping
+to a chord subalphabet (e.g. minor and major chords only, all triads, etc.).
+There is no single 'right' way to compare two sequences of chord labels.
+Embracing this reality, every conventional comparison rule is provided.
+Comparisons are made over the different components of each chord (e.g.
+G:maj(6)/5): the root (G), the root-invariant active semitones as determined by
+the quality shorthand (maj) and scale degrees (6), and the bass interval (5).
 This submodule provides functions both for comparing a sequences of chord
 labels according to some chord subalphabet mapping and for using these
 comparisons to score a sequence of estimated chords against a reference.
@@ -93,7 +92,7 @@ References
     .. [#harte2010towards] C. Harte. Towards Automatic Extraction of Harmony
         Information from Music Signals. PhD thesis, Queen Mary University of
         London, August 2010.
-'''
+"""
 
 import collections
 import re
@@ -111,7 +110,7 @@ X_CHORD_ENCODED = -1, np.array([-1]*BITMAP_LENGTH), -1
 
 
 class InvalidChordException(Exception):
-    r'''Exception class for suspect / invalid chord labels'''
+    r"""Exception class for suspect / invalid chord labels."""
 
     def __init__(self, message='', chord_label=None):
         self.message = message
@@ -122,14 +121,14 @@ class InvalidChordException(Exception):
 
 # --- Chord Primitives ---
 def _pitch_classes():
-    r'''Map from pitch class (str) to semitone (int).'''
+    r"""Map from pitch class (str) to semitone (int)."""
     pitch_classes = ['C', 'D', 'E', 'F', 'G', 'A', 'B']
     semitones = [0, 2, 4, 5, 7, 9, 11]
     return dict([(c, s) for c, s in zip(pitch_classes, semitones)])
 
 
 def _scale_degrees():
-    r'''Mapping from scale degrees (str) to semitones (int).'''
+    r"""Mapping from scale degrees (str) to semitones (int)."""
     degrees = ['1', '2', '3',  '4',  '5',  '6', '7',
                '8', '9', '10', '11', '12', '13']
     semitones = [0, 2, 4, 5, 7, 9, 11, 12, 14, 16, 17, 19, 21]
@@ -141,7 +140,7 @@ PITCH_CLASSES = _pitch_classes()
 
 
 def pitch_class_to_semitone(pitch_class):
-    r'''Convert a pitch class to semitone.
+    r"""Convert a pitch class to semitone.
 
     Parameters
     ----------
@@ -152,8 +151,7 @@ def pitch_class_to_semitone(pitch_class):
     -------
     semitone : int
         Semitone value of the pitch class.
-
-    '''
+    """
     semitone = 0
     for idx, char in enumerate(pitch_class):
         if char == '#' and idx > 0:
@@ -285,7 +283,6 @@ def quality_to_bitmap(quality):
     -------
     bitmap : np.ndarray
         Bitmap representation of this quality (12-dim).
-
     """
     if quality not in QUALITIES:
         raise InvalidChordException(
@@ -315,8 +312,8 @@ EXTENDED_QUALITY_REDUX = {
 
 
 def reduce_extended_quality(quality):
-    """Map an extended chord quality to a simpler one, moving upper voices to
-    a set of scale degree extensions.
+    """Map an extended chord quality to a simpler one, moving upper voices to a
+    set of scale degree extensions.
 
     Parameters
     ----------
@@ -329,7 +326,6 @@ def reduce_extended_quality(quality):
         New chord quality.
     extensions : set
         Scale degrees extensions for the quality.
-
     """
     return EXTENDED_QUALITY_REDUX.get(quality, (quality, set()))
 
@@ -342,7 +338,6 @@ def validate_chord_label(chord_label):
     ----------
     chord : str
         Chord label to validate.
-
     """
 
     # This monster regexp is pulled from the JAMS chord namespace,
@@ -451,7 +446,6 @@ def join(chord_root, quality='', extensions=None, bass=''):
     -------
     chord_label : str
         A complete chord label.
-
     """
     chord_label = chord_root
     if quality or extensions:
@@ -489,7 +483,6 @@ def encode(chord_label, reduce_extended_chords=False,
         12-dim vector of relative semitones in the chord spelling.
     bass_number : int
         Relative semitone of the chord's bass note, e.g. 0=root, 7=fifth, etc.
-
     """
 
     if chord_label == NO_CHORD:
@@ -540,7 +533,6 @@ def encode_many(chord_labels, reduce_extended_chords=False):
         12-dim vector of relative semitones in the given chord quality.
     bass_number : np.ndarray, dtype=int
         Relative semitones of the chord's bass notes.
-
     """
     num_items = len(chord_labels)
     roots, basses = np.zeros([2, num_items], dtype=np.int64)
@@ -579,7 +571,6 @@ def rotate_bitmap_to_root(bitmap, chord_root):
     -------
     bitmap : np.ndarray, shape=(12,)
         Absolute bitmap of active pitch classes.
-
     """
     bitmap = np.asarray(bitmap)
     assert bitmap.ndim == 1, "Currently only 1D bitmaps are supported."
@@ -606,7 +597,6 @@ def rotate_bitmaps_to_roots(bitmaps, roots):
     -------
     bitmap : np.ndarray, shape=(N, 12)
         Absolute bitmaps of active pitch classes.
-
     """
     abs_bitmaps = []
     for bitmap, chord_root in zip(bitmaps, roots):
@@ -625,7 +615,6 @@ def validate(reference_labels, estimated_labels):
         Reference chord labels to score against.
     estimated_labels : list, len=n
         Estimated chord labels to score against.
-
     """
     N = len(reference_labels)
     M = len(estimated_labels)
@@ -678,7 +667,6 @@ def weighted_accuracy(comparisons, weights):
     -------
     score : float
         Weighted accuracy
-
     """
     N = len(comparisons)
     # There should be as many weights as comparisons
@@ -740,7 +728,6 @@ def thirds(reference_labels, estimated_labels):
     -------
     comparison_scores : np.ndarray, shape=(n,), dtype=float
         Comparison scores, in [0.0, 1.0]
-
     """
     validate(reference_labels, estimated_labels)
     ref_roots, ref_semitones = encode_many(reference_labels, False)[:2]
@@ -787,7 +774,6 @@ def thirds_inv(reference_labels, estimated_labels):
     -------
     scores : np.ndarray, shape=(n,), dtype=float
         Comparison scores, in [0.0, 1.0]
-
     """
     validate(reference_labels, estimated_labels)
     ref_roots, ref_semitones, ref_bass = encode_many(reference_labels, False)
@@ -835,7 +821,6 @@ def triads(reference_labels, estimated_labels):
     -------
     comparison_scores : np.ndarray, shape=(n,), dtype=float
         Comparison scores, in [0.0, 1.0]
-
     """
     validate(reference_labels, estimated_labels)
     ref_roots, ref_semitones = encode_many(reference_labels, False)[:2]
@@ -883,7 +868,6 @@ def triads_inv(reference_labels, estimated_labels):
     -------
     scores : np.ndarray, shape=(n,), dtype=float
         Comparison scores, in [0.0, 1.0]
-
     """
     validate(reference_labels, estimated_labels)
     ref_roots, ref_semitones, ref_bass = encode_many(reference_labels, False)
@@ -932,7 +916,6 @@ def tetrads(reference_labels, estimated_labels):
     -------
     comparison_scores : np.ndarray, shape=(n,), dtype=float
         Comparison scores, in [0.0, 1.0]
-
     """
     validate(reference_labels, estimated_labels)
     ref_roots, ref_semitones = encode_many(reference_labels, False)[:2]
@@ -979,7 +962,6 @@ def tetrads_inv(reference_labels, estimated_labels):
     -------
     comparison_scores : np.ndarray, shape=(n,), dtype=float
         Comparison scores, in [0.0, 1.0]
-
     """
     validate(reference_labels, estimated_labels)
     ref_roots, ref_semitones, ref_bass = encode_many(reference_labels, False)
@@ -1028,7 +1010,6 @@ def root(reference_labels, estimated_labels):
     comparison_scores : np.ndarray, shape=(n,), dtype=float
         Comparison scores, in [0.0, 1.0], or -1 if the comparison is out of
         gamut.
-
     """
 
     validate(reference_labels, estimated_labels)
@@ -1073,7 +1054,6 @@ def mirex(reference_labels, estimated_labels):
     -------
     comparison_scores : np.ndarray, shape=(n,), dtype=float
         Comparison scores, in [0.0, 1.0]
-
     """
     validate(reference_labels, estimated_labels)
     # TODO(?): Should this be an argument?
@@ -1137,7 +1117,6 @@ def majmin(reference_labels, estimated_labels):
     comparison_scores : np.ndarray, shape=(n,), dtype=float
         Comparison scores, in [0.0, 1.0], or -1 if the comparison is out of
         gamut.
-
     """
     validate(reference_labels, estimated_labels)
     maj_semitones = np.array(QUALITIES['maj'][:8])
@@ -1204,7 +1183,6 @@ def majmin_inv(reference_labels, estimated_labels):
     comparison_scores : np.ndarray, shape=(n,), dtype=float
         Comparison scores, in [0.0, 1.0], or -1 if the comparison is out of
         gamut.
-
     """
     validate(reference_labels, estimated_labels)
     maj_semitones = np.array(QUALITIES['maj'][:8])
@@ -1268,7 +1246,6 @@ def sevenths(reference_labels, estimated_labels):
     comparison_scores : np.ndarray, shape=(n,), dtype=float
         Comparison scores, in [0.0, 1.0], or -1 if the comparison is out of
         gamut.
-
     """
     validate(reference_labels, estimated_labels)
     seventh_qualities = ['maj', 'min', 'maj7', '7', 'min7', '']
@@ -1323,7 +1300,6 @@ def sevenths_inv(reference_labels, estimated_labels):
     comparison_scores : np.ndarray, shape=(n,), dtype=float
         Comparison scores, in [0.0, 1.0], or -1 if the comparison is out of
         gamut.
-
     """
     validate(reference_labels, estimated_labels)
     seventh_qualities = ['maj', 'min', 'maj7', '7', 'min7', '']
@@ -1350,9 +1326,9 @@ def sevenths_inv(reference_labels, estimated_labels):
 
 
 def directional_hamming_distance(reference_intervals, estimated_intervals):
-    """Compute the directional hamming distance between reference and
-    estimated intervals as defined by [#harte2010towards]_ and used for MIREX
-    'OverSeg', 'UnderSeg' and 'MeanSeg' measures.
+    """Compute the directional hamming distance between reference and estimated
+    intervals as defined by [#harte2010towards]_ and used for MIREX 'OverSeg',
+    'UnderSeg' and 'MeanSeg' measures.
 
     Examples
     --------
@@ -1480,8 +1456,7 @@ def seg(reference_intervals, estimated_intervals):
 
 
 def merge_chord_intervals(intervals, labels):
-    """
-    Merge consecutive chord intervals if they represent the same chord.
+    """Merge consecutive chord intervals if they represent the same chord.
 
     Parameters
     ----------
@@ -1496,7 +1471,6 @@ def merge_chord_intervals(intervals, labels):
     -------
     merged_ivs : np.ndarray, shape=(k, 2), dtype=float
         Merged chord intervals, k <= n
-
     """
     roots, semitones, basses = encode_many(labels, True)
     merged_ivs = []
@@ -1553,7 +1527,6 @@ def evaluate(ref_intervals, ref_labels, est_intervals, est_labels, **kwargs):
     scores : dict
         Dictionary of scores, where the key is the metric name (str) and
         the value is the (float) score achieved.
-
     """
     # Append or crop estimated intervals so their span is the same as reference
     est_intervals, est_labels = util.adjust_intervals(

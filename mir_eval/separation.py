@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-'''
-Source separation algorithms attempt to extract recordings of individual
+"""Source separation algorithms attempt to extract recordings of individual
 sources from a recording of a mixture of sources.  Evaluation methods for
 source separation compare the extracted sources from reference sources and
 attempt to measure the perceptual quality of the separation.
@@ -41,9 +40,7 @@ References
   .. [#vincent2006performance] Emmanuel Vincent, Rémi Gribonval, and Cédric
       Févotte, "Performance measurement in blind audio source separation," IEEE
       Trans. on Audio, Speech and Language Processing, 14(4):1462-1469, 2006.
-
-
-'''
+"""
 
 import collections
 import itertools
@@ -70,7 +67,6 @@ def validate(reference_sources, estimated_sources):
         matrix containing true sources
     estimated_sources : np.ndarray, shape=(nsrc, nsampl)
         matrix containing estimated sources
-
     """
 
     if reference_sources.shape != estimated_sources.shape:
@@ -123,15 +119,15 @@ def validate(reference_sources, estimated_sources):
 
 
 def _any_source_silent(sources):
-    """Returns true if the parameter sources has any silent first dimensions"""
+    """Returns true if the parameter sources has any silent first
+    dimensions."""
     return np.any(np.all(np.sum(
         sources, axis=tuple(range(2, sources.ndim))) == 0, axis=1))
 
 
 def bss_eval_sources(reference_sources, estimated_sources,
                      compute_permutation=True):
-    """
-    Ordering and measurement of the separation quality for estimated source
+    """Ordering and measurement of the separation quality for estimated source
     signals in terms of filtered true source, interference and artifacts.
 
     The decomposition allows a time-invariant filter distortion of length
@@ -183,7 +179,6 @@ def bss_eval_sources(reference_sources, estimated_sources,
         Lutter and Ngoc Q.K. Duong, "The Signal Separation Evaluation Campaign
         (2007-2010): Achievements and remaining challenges", Signal Processing,
         92, pp. 1928-1936, 2012.
-
     """
 
     # make sure the input is of shape (nsrc, nsampl)
@@ -245,7 +240,7 @@ def bss_eval_sources(reference_sources, estimated_sources,
 def bss_eval_sources_framewise(reference_sources, estimated_sources,
                                window=30*44100, hop=15*44100,
                                compute_permutation=False):
-    """Framewise computation of bss_eval_sources
+    """Framewise computation of bss_eval_sources.
 
     Please be aware that this function does not compute permutations (by
     default) on the possible relations between reference_sources and
@@ -304,7 +299,6 @@ def bss_eval_sources_framewise(reference_sources, estimated_sources,
         the mean SIR sense (estimated source number ``perm[j]`` corresponds to
         true source number ``j``).  Note: ``perm`` will be ``range(nsrc)`` for
         all windows if ``compute_permutation`` is ``False``
-
     """
 
     # make sure the input is of shape (nsrc, nsampl)
@@ -356,8 +350,8 @@ def bss_eval_sources_framewise(reference_sources, estimated_sources,
 
 def bss_eval_images(reference_sources, estimated_sources,
                     compute_permutation=True):
-    """Implementation of the bss_eval_images function from the
-    BSS_EVAL Matlab toolbox.
+    """Implementation of the bss_eval_images function from the BSS_EVAL Matlab
+    toolbox.
 
     Ordering and measurement of the separation quality for estimated source
     signals in terms of filtered true source, interference and artifacts.
@@ -412,7 +406,6 @@ def bss_eval_images(reference_sources, estimated_sources,
         Lutter and Ngoc Q.K. Duong, "The Signal Separation Evaluation Campaign
         (2007-2010): Achievements and remaining challenges", Signal Processing,
         92, pp. 1928-1936, 2012.
-
     """
 
     # make sure the input has 3 dimensions
@@ -494,7 +487,7 @@ def bss_eval_images(reference_sources, estimated_sources,
 def bss_eval_images_framewise(reference_sources, estimated_sources,
                               window=30*44100, hop=15*44100,
                               compute_permutation=False):
-    """Framewise computation of bss_eval_images
+    """Framewise computation of bss_eval_images.
 
     Please be aware that this function does not compute permutations (by
     default) on the possible relations between ``reference_sources`` and
@@ -555,7 +548,6 @@ def bss_eval_images_framewise(reference_sources, estimated_sources,
         true source number j)
         Note: perm will be range(nsrc) for all windows if compute_permutation
         is False
-
     """
 
     # make sure the input has 3 dimensions
@@ -610,9 +602,8 @@ def bss_eval_images_framewise(reference_sources, estimated_sources,
 def _bss_decomp_mtifilt(reference_sources, estimated_source, j, flen):
     """Decomposition of an estimated source image into four components
     representing respectively the true source image, spatial (or filtering)
-    distortion, interference and artifacts, derived from the true source
-    images using multichannel time-invariant filters.
-    """
+    distortion, interference and artifacts, derived from the true source images
+    using multichannel time-invariant filters."""
     nsampl = estimated_source.size
     # decomposition
     # true source image
@@ -633,13 +624,15 @@ def _bss_decomp_mtifilt_images(reference_sources, estimated_source, j, flen,
                                Gj=None, G=None):
     """Decomposition of an estimated source image into four components
     representing respectively the true source image, spatial (or filtering)
-    distortion, interference and artifacts, derived from the true source
-    images using multichannel time-invariant filters.
-    Adapted version to work with multichannel sources.
-    Improved performance can be gained by passing Gj and G parameters initially
-    as all zeros. These parameters store the results from the computation of
-    the G matrix in _project_images and then return them for subsequent calls
-    to this function. This only works when not computing permuations.
+    distortion, interference and artifacts, derived from the true source images
+    using multichannel time-invariant filters.
+
+    Adapted version to work with multichannel sources. Improved
+    performance can be gained by passing Gj and G parameters initially
+    as all zeros. These parameters store the results from the
+    computation of the G matrix in _project_images and then return them
+    for subsequent calls to this function. This only works when not
+    computing permuations.
     """
     nsampl = np.shape(estimated_source)[0]
     nchan = np.shape(estimated_source)[1]
@@ -679,8 +672,7 @@ def _bss_decomp_mtifilt_images(reference_sources, estimated_source, j, flen,
 
 def _project(reference_sources, estimated_source, flen):
     """Least-squares projection of estimated source on the subspace spanned by
-    delayed versions of reference sources, with delays between 0 and flen-1
-    """
+    delayed versions of reference sources, with delays between 0 and flen-1."""
     nsrc = reference_sources.shape[0]
     nsampl = reference_sources.shape[1]
 
@@ -726,9 +718,10 @@ def _project(reference_sources, estimated_source, flen):
 def _project_images(reference_sources, estimated_source, flen, G=None):
     """Least-squares projection of estimated source on the subspace spanned by
     delayed versions of reference sources, with delays between 0 and flen-1.
-    Passing G as all zeros will populate the G matrix and return it so it can
-    be passed into the next call to avoid recomputing G (this will only works
-    if not computing permutations).
+
+    Passing G as all zeros will populate the G matrix and return it so
+    it can be passed into the next call to avoid recomputing G (this
+    will only works if not computing permutations).
     """
     nsrc = reference_sources.shape[0]
     nsampl = reference_sources.shape[1]
@@ -803,8 +796,7 @@ def _project_images(reference_sources, estimated_source, flen, G=None):
 
 def _bss_source_crit(s_true, e_spat, e_interf, e_artif):
     """Measurement of the separation quality for a given source in terms of
-    filtered true source, interference and artifacts.
-    """
+    filtered true source, interference and artifacts."""
     # energy ratios
     s_filt = s_true + e_spat
     sdr = _safe_db(np.sum(s_filt**2), np.sum((e_interf + e_artif)**2))
@@ -815,8 +807,7 @@ def _bss_source_crit(s_true, e_spat, e_interf, e_artif):
 
 def _bss_image_crit(s_true, e_spat, e_interf, e_artif):
     """Measurement of the separation quality for a given image in terms of
-    filtered true source, spatial error, interference and artifacts.
-    """
+    filtered true source, spatial error, interference and artifacts."""
     # energy ratios
     sdr = _safe_db(np.sum(s_true**2), np.sum((e_spat+e_interf+e_artif)**2))
     isr = _safe_db(np.sum(s_true**2), np.sum(e_spat**2))
@@ -827,8 +818,9 @@ def _bss_image_crit(s_true, e_spat, e_interf, e_artif):
 
 def _safe_db(num, den):
     """Properly handle the potential +Inf db SIR, instead of raising a
-    RuntimeWarning. Only denominator is checked because the numerator can never
-    be 0.
+    RuntimeWarning.
+
+    Only denominator is checked because the numerator can never be 0.
     """
     if den == 0:
         return np.Inf
@@ -866,7 +858,6 @@ def evaluate(reference_sources, estimated_sources, **kwargs):
     scores : dict
         Dictionary of scores, where the key is the metric name (str) and
         the value is the (float) score achieved.
-
     """
     # Compute all the metrics
     scores = collections.OrderedDict()

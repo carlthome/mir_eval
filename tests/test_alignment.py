@@ -1,6 +1,4 @@
-"""
-Unit tests for mir_eval.alignment
-"""
+"""Unit tests for mir_eval.alignment."""
 
 import glob
 import json

@@ -1,6 +1,4 @@
-"""
-Some unit tests for the pattern discovery task.
-"""
+"""Some unit tests for the pattern discovery task."""
 
 import glob
 import json

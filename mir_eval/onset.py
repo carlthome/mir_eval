@@ -1,5 +1,4 @@
-'''
-The goal of an onset detection algorithm is to automatically determine when
+"""The goal of an onset detection algorithm is to automatically determine when
 notes are played in a piece of music.  The primary method used to evaluate
 onset detectors is to first determine which estimated onsets are "correct",
 where correctness is defined as being within a small window of a reference
@@ -21,7 +20,7 @@ Metrics
 * :func:`mir_eval.onset.f_measure`: Precision, Recall, and F-measure scores
   based on the number of esimated onsets which are sufficiently close to
   reference onsets.
-'''
+"""
 
 import collections
 import warnings
@@ -42,7 +41,6 @@ def validate(reference_onsets, estimated_onsets):
         reference onset locations, in seconds
     estimated_onsets : np.ndarray
         estimated onset locations, in seconds
-
     """
     # If reference or estimated onsets are empty, warn because metric will be 0
     if reference_onsets.size == 0:
@@ -82,7 +80,6 @@ def f_measure(reference_onsets, estimated_onsets, window=.05):
         (# true positives)/(# true positives + # false positives)
     recall : float
         (# true positives)/(# true positives + # false negatives)
-
     """
     validate(reference_onsets, estimated_onsets)
     # If either list is empty, return 0s
@@ -123,7 +120,6 @@ def evaluate(reference_onsets, estimated_onsets, **kwargs):
     scores : dict
         Dictionary of scores, where the key is the metric name (str) and
         the value is the (float) score achieved.
-
     """
     # Compute all metrics
     scores = collections.OrderedDict()

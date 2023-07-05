@@ -1,7 +1,5 @@
-'''
-This submodule collects useful functionality required across the task
-submodules, such as preprocessing, validation, and common computations.
-'''
+"""This submodule collects useful functionality required across the task
+submodules, such as preprocessing, validation, and common computations."""
 
 import inspect
 import os
@@ -29,7 +27,6 @@ def index_labels(labels, case_sensitive=False):
     index_to_label : dict
         Mapping to convert numerical indices back to labels.
         ``labels[i] == index_to_label[indices[i]]``
-
     """
 
     label_to_index = {}
@@ -52,8 +49,8 @@ def index_labels(labels, case_sensitive=False):
 
 
 def generate_labels(items, prefix='__'):
-    """Given an array of items (e.g. events, intervals), create a synthetic label
-    for each event of the form '(label prefix)(item number)'
+    """Given an array of items (e.g. events, intervals), create a synthetic
+    label for each event of the form '(label prefix)(item number)'.
 
     Parameters
     ----------
@@ -67,7 +64,6 @@ def generate_labels(items, prefix='__'):
     -------
     labels : list of str
         Synthetically generated labels
-
     """
     return ['{}{}'.format(prefix, n) for n in range(len(items))]
 
@@ -112,7 +108,6 @@ def intervals_to_samples(intervals, labels, offset=0, sample_size=0.1,
     -----
         Intervals will be rounded down to the nearest multiple
         of ``sample_size``.
-
     """
 
     # Round intervals to the sample size
@@ -180,8 +175,8 @@ def interpolate_intervals(intervals, labels, time_points, fill_value=None):
 
 
 def sort_labeled_intervals(intervals, labels=None):
-    '''Sort intervals, and optionally, their corresponding labels
-    according to start time.
+    """Sort intervals, and optionally, their corresponding labels according to
+    start time.
 
     Parameters
     ----------
@@ -195,7 +190,7 @@ def sort_labeled_intervals(intervals, labels=None):
     -------
     intervals_sorted or (intervals_sorted, labels_sorted)
         Labels are only returned if provided as input
-    '''
+    """
 
     idx = np.argsort(intervals[:, 0])
 
@@ -224,7 +219,6 @@ def f_measure(precision, recall, beta=1.0):
     -------
     f_measure : float
         The weighted f-measure
-
     """
 
     if precision == 0 and recall == 0:
@@ -247,14 +241,13 @@ def intervals_to_boundaries(intervals, q=5):
     -------
     boundaries : np.ndarray
         Interval boundary times, including the end of the final interval
-
     """
 
     return np.unique(np.ravel(np.round(intervals, decimals=q)))
 
 
 def boundaries_to_intervals(boundaries):
-    """Convert an array of event times into intervals
+    """Convert an array of event times into intervals.
 
     Parameters
     ----------
@@ -471,7 +464,6 @@ def intersect_files(flist1, flist2):
         subset of filepaths with matching stems from ``flist1``
     sublist2 : list
         corresponding filepaths from ``flist2``
-
     """
     def fname(abs_path):
         """Returns the filename given an absolute path.
@@ -483,7 +475,6 @@ def intersect_files(flist1, flist2):
 
         Returns
         -------
-
         """
         return os.path.splitext(os.path.split(abs_path)[-1])[0]
 
@@ -519,7 +510,6 @@ def merge_labeled_intervals(x_intervals, x_labels, y_intervals, y_labels):
         New labels for the sequence ``x``
     new_y_labels : list
         New labels for the sequence ``y``
-
     """
     align_check = [x_intervals[0, 0] == y_intervals[0, 0],
                    x_intervals[-1, 1] == y_intervals[-1, 1]]
@@ -544,9 +534,9 @@ def merge_labeled_intervals(x_intervals, x_labels, y_intervals, y_labels):
 
 
 def _bipartite_match(graph):
-    """Find maximum cardinality matching of a bipartite graph (U,V,E).
-    The input format is a dictionary mapping members of U to a list
-    of their neighbors in V.
+    """Find maximum cardinality matching of a bipartite graph (U,V,E). The
+    input format is a dictionary mapping members of U to a list of their
+    neighbors in V.
 
     The output is a dict M mapping members of V to their matches in U.
 
@@ -559,7 +549,6 @@ def _bipartite_match(graph):
     -------
     matching : dictionary : right-vertex -> left vertex
         A maximal bipartite matching.
-
     """
     # Adapted from:
     #
@@ -615,7 +604,9 @@ def _bipartite_match(graph):
 
         def recurse(v):
             """Recursively search backward through layers to find alternating
-            paths.  recursion returns true if found path, false otherwise
+            paths.
+
+            recursion returns true if found path, false otherwise
             """
             if v in preds:
                 L = preds[v]
@@ -634,8 +625,8 @@ def _bipartite_match(graph):
 
 
 def _outer_distance_mod_n(ref, est, modulus=12):
-    """Compute the absolute outer distance modulo n.
-    Using this distance, d(11, 0) = 1 (modulo 12)
+    """Compute the absolute outer distance modulo n. Using this distance, d(11,
+    0) = 1 (modulo 12)
 
     Parameters
     ----------
@@ -651,7 +642,6 @@ def _outer_distance_mod_n(ref, est, modulus=12):
     -------
     outer_distance : np.ndarray, shape=(n, m)
         The outer circular distance modulo n.
-
     """
     ref_mod_n = np.mod(ref, modulus)
     est_mod_n = np.mod(est, modulus)
@@ -688,7 +678,6 @@ def match_events(ref, est, window, distance=None):
     matching : list of tuples
         A list of matched reference and event numbers.
         ``matching[i] == (i, j)`` where ``ref[i]`` matches ``est[j]``.
-
     """
     if distance is not None:
         # Compute the indices of feasible pairings
@@ -710,7 +699,7 @@ def match_events(ref, est, window, distance=None):
 
 
 def _fast_hit_windows(ref, est, window):
-    '''Fast calculation of windowed hits for time events.
+    """Fast calculation of windowed hits for time events.
 
     Given two lists of event times ``ref`` and ``est``, and a
     tolerance window, computes a list of pairings
@@ -735,7 +724,7 @@ def _fast_hit_windows(ref, est, window):
     hit_ref : np.ndarray
     hit_est : np.ndarray
         indices such that ``|hit_ref[i] - hit_est[i]| <= window``
-    '''
+    """
 
     ref = np.asarray(ref)
     est = np.asarray(est)
@@ -762,7 +751,6 @@ def validate_intervals(intervals):
     ----------
     intervals : np.ndarray, shape=(n, 2)
         Array of interval start/end locations.
-
     """
 
     # Validate interval shape
@@ -790,7 +778,6 @@ def validate_events(events, max_time=30000.):
     max_time : float
         If an event is found above this time, a ValueError will be raised.
         (Default value = 30000.)
-
     """
     # Make sure no event times are huge
     if (events > max_time).any():
@@ -809,8 +796,8 @@ def validate_events(events, max_time=30000.):
 
 def validate_frequencies(frequencies, max_freq, min_freq,
                          allow_negatives=False):
-    """Checks that a 1-d frequency ndarray is well-formed, and raises
-    errors if not.
+    """Checks that a 1-d frequency ndarray is well-formed, and raises errors if
+    not.
 
     Parameters
     ----------
@@ -847,7 +834,7 @@ def validate_frequencies(frequencies, max_freq, min_freq,
 
 
 def has_kwargs(function):
-    r'''Determine whether a function has \*\*kwargs.
+    r"""Determine whether a function has \*\*kwargs.
 
     Parameters
     ----------
@@ -858,7 +845,7 @@ def has_kwargs(function):
     -------
     True if function accepts arbitrary keyword arguments.
     False otherwise.
-    '''
+    """
 
     sig = inspect.signature(function)
 
@@ -870,10 +857,10 @@ def has_kwargs(function):
 
 
 def filter_kwargs(_function, *args, **kwargs):
-    """Given a function and args and keyword args to pass to it, call the function
-    but using only the keyword arguments which it accepts.  This is equivalent
-    to redefining the function with an additional \*\*kwargs to accept slop
-    keyword args.
+    """Given a function and args and keyword args to pass to it, call the
+    function but using only the keyword arguments which it accepts.  This is
+    equivalent to redefining the function with an additional \*\*kwargs to
+    accept slop keyword args.
 
     If the target function already accepts \*\*kwargs parameters, no filtering
     is performed.
@@ -882,7 +869,6 @@ def filter_kwargs(_function, *args, **kwargs):
     ----------
     _function : callable
         Function to call.  Can take in any number of args or kwargs
-
     """
 
     if has_kwargs(_function):
@@ -915,14 +901,13 @@ def intervals_to_durations(intervals):
     -------
     durations : np.ndarray, shape=(n,)
         Array of the duration of each interval.
-
     """
     validate_intervals(intervals)
     return np.abs(np.diff(intervals, axis=-1)).flatten()
 
 
 def hz_to_midi(freqs):
-    '''Convert Hz to MIDI numbers
+    """Convert Hz to MIDI numbers.
 
     Parameters
     ----------
@@ -934,12 +919,12 @@ def hz_to_midi(freqs):
     midi : number or ndarray
         MIDI note numbers corresponding to input frequencies.
         Note that these may be fractional.
-    '''
+    """
     return 12.0 * (np.log2(freqs) - np.log2(440.0)) + 69.0
 
 
 def midi_to_hz(midi):
-    '''Convert MIDI numbers to Hz
+    """Convert MIDI numbers to Hz.
 
     Parameters
     ----------
@@ -950,5 +935,5 @@ def midi_to_hz(midi):
     -------
     freqs : number or ndarray
         Frequency/frequencies in Hz corresponding to `midi`
-    '''
+    """
     return 440.0 * (2.0 ** ((midi - 69.0)/12.0))

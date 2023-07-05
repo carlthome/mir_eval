@@ -1,6 +1,4 @@
-'''
-Unit tests for mir_eval.segment
-'''
+"""Unit tests for mir_eval.segment."""
 
 import glob
 import json

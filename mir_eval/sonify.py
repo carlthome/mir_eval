@@ -1,7 +1,7 @@
-'''
-Methods which sonify annotations for "evaluation by ear".
+"""Methods which sonify annotations for "evaluation by ear".
+
 All functions return a raw signal at the specified sampling rate.
-'''
+"""
 
 import numpy as np
 from numpy.lib.stride_tricks import as_strided
@@ -11,7 +11,7 @@ from . import chord, util
 
 
 def clicks(times, fs, click=None, length=None):
-    """Returns a signal with the signal 'click' placed at each specified time
+    """Returns a signal with the signal 'click' placed at each specified time.
 
     Parameters
     ----------
@@ -29,7 +29,6 @@ def clicks(times, fs, click=None, length=None):
     -------
     click_signal : np.ndarray
         Synthesized click signal
-
     """
     # Create default click signal
     if click is None:
@@ -61,7 +60,7 @@ def clicks(times, fs, click=None, length=None):
 
 def time_frequency(gram, frequencies, times, fs, function=np.sin, length=None,
                    n_dec=1):
-    """Reverse synthesis of a time-frequency representation of a signal
+    """Reverse synthesis of a time-frequency representation of a signal.
 
     Parameters
     ----------
@@ -92,7 +91,6 @@ def time_frequency(gram, frequencies, times, fs, function=np.sin, length=None,
     -------
     output : np.ndarray
         synthesized version of the piano roll
-
     """
     # Default value for length
     if times.ndim == 1:
@@ -110,8 +108,9 @@ def time_frequency(gram, frequencies, times, fs, function=np.sin, length=None,
 
     def _fast_synthesize(frequency):
         """A faster way to synthesize a signal.
-            Generate one cycle, and simulate arbitrary repetitions
-            using array indexing tricks.
+
+        Generate one cycle, and simulate arbitrary repetitions using
+        array indexing tricks.
         """
         # hack so that we can ensure an integer number of periods and samples
         # rounds frequency to 1st decimal, s.t. 10 * frequency will be an int
@@ -185,7 +184,7 @@ def time_frequency(gram, frequencies, times, fs, function=np.sin, length=None,
 
 def pitch_contour(times, frequencies, fs, amplitudes=None, function=np.sin,
                   length=None, kind='linear'):
-    '''Sonify a pitch contour.
+    """Sonify a pitch contour.
 
     Parameters
     ----------
@@ -218,7 +217,7 @@ def pitch_contour(times, frequencies, fs, amplitudes=None, function=np.sin,
     -------
     output : np.ndarray
         synthesized version of the pitch contour
-    '''
+    """
 
     fs = float(fs)
 
@@ -271,7 +270,6 @@ def chroma(chromagram, times, fs, **kwargs):
     -------
     output : np.ndarray
         Synthesized chromagram
-
     """
     # We'll just use time_frequency with a Shepard tone-gram
     # To create the Shepard tone-gram, we copy the chromagram across 7 octaves
@@ -297,7 +295,7 @@ def chroma(chromagram, times, fs, **kwargs):
 
 
 def chords(chord_labels, intervals, fs, **kwargs):
-    """Synthesizes chord labels
+    """Synthesizes chord labels.
 
     Parameters
     ----------
@@ -315,7 +313,6 @@ def chords(chord_labels, intervals, fs, **kwargs):
     -------
     output : np.ndarray
         Synthesized chord labels
-
     """
     util.validate_intervals(intervals)
 

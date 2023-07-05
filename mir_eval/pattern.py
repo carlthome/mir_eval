@@ -1,7 +1,6 @@
-"""
-Pattern discovery involves the identification of musical patterns (i.e. short
-fragments or melodic ideas that repeat at least twice) both from audio and
-symbolic representations.  The metrics used to evaluate pattern discovery
+"""Pattern discovery involves the identification of musical patterns (i.e.
+short fragments or melodic ideas that repeat at least twice) both from audio
+and symbolic representations.  The metrics used to evaluate pattern discovery
 systems attempt to quantify the ability of the algorithm to not only determine
 the present patterns in a piece, but also to find all of their occurrences.
 
@@ -64,7 +63,7 @@ from . import util
 
 
 def _n_onset_midi(patterns):
-    """Computes the number of onset_midi objects in a pattern
+    """Computes the number of onset_midi objects in a pattern.
 
     Parameters
     ----------
@@ -76,7 +75,6 @@ def _n_onset_midi(patterns):
     -------
     n_onsets : int
         Number of onsets within the pattern.
-
     """
     return len([o_m for pat in patterns for occ in pat for o_m in occ])
 
@@ -95,7 +93,6 @@ def validate(reference_patterns, estimated_patterns):
 
     Returns
     -------
-
     """
     # Warn if pattern lists are empty
     if _n_onset_midi(reference_patterns) == 0:
@@ -128,7 +125,6 @@ def _occurrence_intersection(occ_P, occ_Q):
     -------
     S : set
         Set of the intersection between occ_P and occ_Q.
-
     """
     set_P = set([tuple(onset_midi) for onset_midi in occ_P])
     set_Q = set([tuple(onset_midi) for onset_midi in occ_Q])
@@ -155,7 +151,6 @@ def _compute_score_matrix(P, Q, similarity_metric="cardinality_score"):
     -------
     sm : np.array
         The score matrix between P and Q using the similarity_metric.
-
     """
     sm = np.zeros((len(P), len(Q)))     # The score matrix
     for iP, occ_P in enumerate(P):
@@ -207,7 +202,6 @@ def standard_FPR(reference_patterns, estimated_patterns, tol=1e-5):
         The standard Precision
     recall : float
         The standard Recall
-
     """
     validate(reference_patterns, estimated_patterns)
     nP = len(reference_patterns)    # Number of patterns in the reference
@@ -280,7 +274,6 @@ def establishment_FPR(reference_patterns, estimated_patterns,
         The establishment Precision
     recall : float
         The establishment Recall
-
     """
     validate(reference_patterns, estimated_patterns)
     nP = len(reference_patterns)    # Number of elements in reference
@@ -308,7 +301,6 @@ def establishment_FPR(reference_patterns, estimated_patterns,
 def occurrence_FPR(reference_patterns, estimated_patterns, thres=.75,
                    similarity_metric="cardinality_score"):
     """Establishment F1 Score, Precision and Recall.
-
 
     Examples
     --------
@@ -347,7 +339,6 @@ def occurrence_FPR(reference_patterns, estimated_patterns, thres=.75,
         The establishment Precision
     recall : float
         The establishment Recall
-
     """
     validate(reference_patterns, estimated_patterns)
     # Number of elements in reference
@@ -415,13 +406,12 @@ def three_layer_FPR(reference_patterns, estimated_patterns):
         The three-layer Precision
     recall : float
         The three-layer Recall
-
     """
     validate(reference_patterns, estimated_patterns)
 
     def compute_first_layer_PR(ref_occs, est_occs):
-        """Computes the first layer Precision and Recall values given the
-        set of occurrences in the reference and the set of occurrences in the
+        """Computes the first layer Precision and Recall values given the set
+        of occurrences in the reference and the set of occurrences in the
         estimation.
 
         Parameters
@@ -433,7 +423,6 @@ def three_layer_FPR(reference_patterns, estimated_patterns):
 
         Returns
         -------
-
         """
         # Find the length of the intersection between reference and estimation
         s = len(_occurrence_intersection(ref_occs, est_occs))
@@ -444,8 +433,8 @@ def three_layer_FPR(reference_patterns, estimated_patterns):
         return precision, recall
 
     def compute_second_layer_PR(ref_pattern, est_pattern):
-        """Computes the second layer Precision and Recall values given the
-        set of occurrences in the reference and the set of occurrences in the
+        """Computes the second layer Precision and Recall values given the set
+        of occurrences in the reference and the set of occurrences in the
         estimation.
 
         Parameters
@@ -457,7 +446,6 @@ def three_layer_FPR(reference_patterns, estimated_patterns):
 
         Returns
         -------
-
         """
         # Compute the first layer scores
         F_1 = compute_layer(ref_pattern, est_pattern)
@@ -469,8 +457,8 @@ def three_layer_FPR(reference_patterns, estimated_patterns):
 
     def compute_layer(ref_elements, est_elements, layer=1):
         """Computes the F-measure matrix for a given layer. The reference and
-        estimated elements can be either patters or occurrences, depending
-        on the layer.
+        estimated elements can be either patters or occurrences, depending on
+        the layer.
 
         For layer 1, the elements must be occurrences.
         For layer 2, the elements must be patterns.
@@ -486,7 +474,6 @@ def three_layer_FPR(reference_patterns, estimated_patterns):
 
         Returns
         -------
-
         """
         if layer != 1 and layer != 2:
             raise ValueError("Layer (%d) must be an integer between 1 and 2"
@@ -552,7 +539,6 @@ def first_n_three_layer_P(reference_patterns, estimated_patterns, n=5):
     -------
     precision : float
         The first n three-layer Precision
-
     """
 
     validate(reference_patterns, estimated_patterns)
@@ -600,7 +586,6 @@ def first_n_target_proportion_R(reference_patterns, estimated_patterns, n=5):
     -------
     recall : float
         The first n target proportion Recall.
-
     """
 
     validate(reference_patterns, estimated_patterns)
@@ -641,7 +626,6 @@ def evaluate(ref_patterns, est_patterns, **kwargs):
     scores : dict
         Dictionary of scores, where the key is the metric name (str) and
         the value is the (float) score achieved.
-
     """
 
     # Compute all the metrics

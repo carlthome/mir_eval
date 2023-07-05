@@ -1,5 +1,4 @@
-''' Unit tests for utils
-'''
+"""Unit tests for utils."""
 
 import collections
 
@@ -12,8 +11,7 @@ from mir_eval import util
 
 def test_interpolate_intervals():
     """Check that an interval set is interpolated properly, with boundaries
-    conditions and out-of-range values.
-    """
+    conditions and out-of-range values."""
     labels = list('abc')
     intervals = np.array([(n, n + 1.0) for n in range(len(labels))])
     time_points = [-1.0, 0.1, 0.9, 1.0, 2.3, 4.0]
@@ -34,9 +32,8 @@ def test_interpolate_intervals_gap():
 
 @nose.tools.raises(ValueError)
 def test_interpolate_intervals_badtime():
-    """Check that interpolate_intervals throws an exception if
-    input is unordered.
-    """
+    """Check that interpolate_intervals throws an exception if input is
+    unordered."""
     labels = list('abc')
     intervals = np.array([(n, n + 1.0) for n in range(len(labels))])
     time_points = [-1.0, 0.1, 0.9, 0.8, 2.3, 4.0]
@@ -45,8 +42,7 @@ def test_interpolate_intervals_badtime():
 
 def test_intervals_to_samples():
     """Check that an interval set is sampled properly, with boundaries
-    conditions and out-of-range values.
-    """
+    conditions and out-of-range values."""
     labels = list('abc')
     intervals = np.array([(n, n + 1.0) for n in range(len(labels))])
 
@@ -66,8 +62,7 @@ def test_intervals_to_samples():
 
 
 def test_intersect_files():
-    """Check that two non-identical yield correct results.
-    """
+    """Check that two non-identical yield correct results."""
     flist1 = ['/a/b/abc.lab', '/c/d/123.lab', '/e/f/xyz.lab']
     flist2 = ['/g/h/xyz.npy', '/i/j/123.txt', '/k/l/456.lab']
     sublist1, sublist2 = util.intersect_files(flist1, flist2)
@@ -79,8 +74,7 @@ def test_intersect_files():
 
 
 def test_merge_labeled_intervals():
-    """Check that two labeled interval sequences merge correctly.
-    """
+    """Check that two labeled interval sequences merge correctly."""
     x_intvs = np.array([
         [0.0,    0.44],
         [0.44,  2.537],

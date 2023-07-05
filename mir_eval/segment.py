@@ -103,7 +103,6 @@ def validate_boundary(reference_intervals, estimated_intervals, trim):
 
     trim : bool
         will the start and end events be trimmed?
-
     """
 
     if trim:
@@ -146,7 +145,6 @@ def validate_structure(reference_intervals, reference_labels,
     estimated_labels : list, shape=(m,)
         estimated segment labels, in the format returned by
         :func:`mir_eval.io.load_labeled_intervals`.
-
     """
     for (intervals, labels) in [(reference_intervals, reference_labels),
                                 (estimated_intervals, estimated_labels)]:
@@ -230,7 +228,6 @@ def detection(reference_intervals, estimated_intervals,
         recall of reference reference boundaries
     f_measure : float
         F-measure (weighted harmonic mean of ``precision`` and ``recall``)
-
     """
 
     validate_boundary(reference_intervals, estimated_intervals, trim)
@@ -261,8 +258,8 @@ def detection(reference_intervals, estimated_intervals,
 
 
 def deviation(reference_intervals, estimated_intervals, trim=False):
-    """Compute the median deviations between reference
-    and estimated boundary times.
+    """Compute the median deviations between reference and estimated boundary
+    times.
 
     Examples
     --------
@@ -294,7 +291,6 @@ def deviation(reference_intervals, estimated_intervals, trim=False):
     estimated_to_reference : float
         median time from each estimated boundary to the
         closest reference boundary
-
     """
 
     validate_boundary(reference_intervals, estimated_intervals, trim)
@@ -374,7 +370,6 @@ def pairwise(reference_intervals, reference_labels,
         Recall of detecting whether frames belong in the same cluster
     f : float > 0
         F-measure of detecting whether frames belong in the same cluster
-
     """
     validate_structure(reference_intervals, reference_labels,
                        estimated_intervals, estimated_labels)
@@ -467,7 +462,6 @@ def rand_index(reference_intervals, reference_labels,
     -------
     rand_index : float > 0
         Rand index
-
     """
 
     validate_structure(reference_intervals, reference_labels,
@@ -528,7 +522,6 @@ def _contingency_matrix(reference_indices, estimated_indices):
     contingency_matrix : np.ndarray
         Contingency matrix, shape=(#reference indices, #estimated indices)
     .. note:: Based on sklearn.metrics.cluster.contingency_matrix
-
     """
     ref_classes, ref_class_idx = np.unique(reference_indices,
                                            return_inverse=True)
@@ -559,7 +552,6 @@ def _adjusted_rand_index(reference_indices, estimated_indices):
         Adjusted Rand index
 
     .. note:: Based on sklearn.metrics.cluster.adjusted_rand_score
-
     """
     n_samples = len(reference_indices)
     ref_classes = np.unique(reference_indices)
@@ -633,7 +625,6 @@ def ari(reference_intervals, reference_labels,
     -------
     ari_score : float > 0
         Adjusted Rand index between segmentations.
-
     """
     validate_structure(reference_intervals, reference_labels,
                        estimated_intervals, estimated_labels)
@@ -679,7 +670,6 @@ def _mutual_info_score(reference_indices, estimated_indices, contingency=None):
         Mutual information
 
     .. note:: Based on sklearn.metrics.cluster.mutual_info_score
-
     """
     if contingency is None:
         contingency = _contingency_matrix(reference_indices,
@@ -715,7 +705,6 @@ def _entropy(labels):
         Entropy of the labeling.
 
     .. note:: Based on sklearn.metrics.cluster.entropy
-
     """
     if len(labels) == 0:
         return 1.0
@@ -729,8 +718,8 @@ def _entropy(labels):
 
 
 def _adjusted_mutual_info_score(reference_indices, estimated_indices):
-    """Compute the mutual information between two sequence labelings, adjusted for
-    chance.
+    """Compute the mutual information between two sequence labelings, adjusted
+    for chance.
 
     Parameters
     ----------
@@ -747,7 +736,6 @@ def _adjusted_mutual_info_score(reference_indices, estimated_indices):
 
     .. note:: Based on sklearn.metrics.cluster.adjusted_mutual_info_score
         and sklearn.metrics.cluster.expected_mutual_info_score
-
     """
     n_samples = len(reference_indices)
     ref_classes = np.unique(reference_indices)
@@ -814,8 +802,8 @@ def _adjusted_mutual_info_score(reference_indices, estimated_indices):
 
 
 def _normalized_mutual_info_score(reference_indices, estimated_indices):
-    """Compute the mutual information between two sequence labelings, adjusted for
-    chance.
+    """Compute the mutual information between two sequence labelings, adjusted
+    for chance.
 
     Parameters
     ----------
@@ -831,7 +819,6 @@ def _normalized_mutual_info_score(reference_indices, estimated_indices):
         Normalized mutual information
 
     .. note:: Based on sklearn.metrics.cluster.normalized_mutual_info_score
-
     """
     ref_classes = np.unique(reference_indices)
     est_classes = np.unique(estimated_indices)
@@ -1185,7 +1172,6 @@ def evaluate(ref_intervals, ref_labels, est_intervals, est_labels, **kwargs):
     scores : dict
         Dictionary of scores, where the key is the metric name (str) and
         the value is the (float) score achieved.
-
     """
 
     # Adjust timespan of estimations relative to ground truth

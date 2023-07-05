@@ -1,6 +1,4 @@
-'''
-Tests for mir_eval.key
-'''
+"""Tests for mir_eval.key."""
 
 import glob
 import json

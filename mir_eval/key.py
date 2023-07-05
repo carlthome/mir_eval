@@ -1,5 +1,4 @@
-'''
-Key Detection involves determining the underlying key (distribution of notes
+"""Key Detection involves determining the underlying key (distribution of notes
 and note transitions) in a piece of music.  Key detection algorithms are
 evaluated by comparing their estimated key to a ground-truth reference key and
 reporting a score according to the relationship of the keys.
@@ -16,7 +15,7 @@ Metrics
 -------
 * :func:`mir_eval.key.weighted_score`: Heuristic scoring of the relation of two
   keys.
-'''
+"""
 
 import collections
 

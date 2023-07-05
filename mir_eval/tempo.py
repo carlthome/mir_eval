@@ -1,6 +1,5 @@
-'''
-The goal of a tempo estimation algorithm is to automatically detect the tempo
-of a piece of music, measured in beats per minute (BPM).
+"""The goal of a tempo estimation algorithm is to automatically detect the
+tempo of a piece of music, measured in beats per minute (BPM).
 
 See http://www.music-ir.org/mirex/wiki/2014:Audio_Tempo_Estimation for a
 description of the task and evaluation criteria.
@@ -17,8 +16,7 @@ Metrics
 -------
 * :func:`mir_eval.tempo.detection`: Relative error, hits, and weighted
   precision of tempo estimation.
-
-'''
+"""
 
 import collections
 import warnings
@@ -29,8 +27,8 @@ from . import util
 
 
 def validate_tempi(tempi, reference=True):
-    """Checks that there are two non-negative tempi.
-    For a reference value, at least one tempo has to be greater than zero.
+    """Checks that there are two non-negative tempi. For a reference value, at
+    least one tempo has to be greater than zero.
 
     Parameters
     ----------
@@ -39,7 +37,6 @@ def validate_tempi(tempi, reference=True):
 
     reference : bool
         indicates a reference value
-
     """
 
     if tempi.size != 2:
@@ -67,7 +64,6 @@ def validate(reference_tempi, reference_weight, estimated_tempi):
 
     estimated_tempi : np.ndarray
         estimated tempo values, in bpm
-
     """
     validate_tempi(reference_tempi, reference=True)
     validate_tempi(estimated_tempi, reference=False)

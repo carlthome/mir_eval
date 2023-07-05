@@ -1,6 +1,4 @@
-"""
-Unit tests for mir_eval.chord
-"""
+"""Unit tests for mir_eval.chord."""
 
 import glob
 import json
@@ -20,13 +18,13 @@ SCORES_GLOB = 'data/chord/output*.json'
 
 
 def __check_valid(function, parameters, result):
-    ''' Helper function for checking the output of a function '''
+    """Helper function for checking the output of a function."""
     assert function(*parameters) == result
 
 
 def __check_exception(function, parameters, exception):
-    ''' Makes sure the provided function throws the provided
-    exception given the provided input '''
+    """Makes sure the provided function throws the provided exception given the
+    provided input."""
     nose.tools.assert_raises(exception, function, *parameters)
 
 
@@ -144,7 +142,7 @@ def test_join():
 
 def test_rotate_bitmaps_to_roots():
     def __check_bitmaps(bitmaps, roots, expected_bitmaps):
-        ''' Helper function for checking bitmaps_to_roots '''
+        """Helper function for checking bitmaps_to_roots."""
         ans = mir_eval.chord.rotate_bitmaps_to_roots(bitmaps, roots)
         assert np.all(ans == expected_bitmaps)
 
@@ -168,7 +166,7 @@ def test_encode():
     def __check_encode(label, expected_root, expected_intervals,
                        expected_bass, reduce_extended_chords,
                        strict_bass_intervals):
-        ''' Helper function for checking encode '''
+        """Helper function for checking encode."""
         root, intervals, bass = mir_eval.chord.encode(
             label, reduce_extended_chords=reduce_extended_chords,
             strict_bass_intervals=strict_bass_intervals)
@@ -209,7 +207,7 @@ def test_encode():
 def test_encode_many():
     def __check_encode_many(labels, expected_roots, expected_intervals,
                             expected_basses):
-        ''' Does all of the logic for checking encode_many '''
+        """Does all of the logic for checking encode_many."""
         roots, intervals, basses = mir_eval.chord.encode_many(labels)
         assert np.all(roots == expected_roots)
         assert np.all(intervals == expected_intervals)
@@ -234,15 +232,15 @@ def test_encode_many():
 
 
 def __check_one_metric(metric, ref_label, est_label, score):
-    ''' Checks that a metric function produces score given ref_label and
-    est_label '''
+    """Checks that a metric function produces score given ref_label and
+    est_label."""
     # We provide a dummy interval.  We're just checking one pair
     # of labels at a time.
     assert metric([ref_label], [est_label]) == score
 
 
 def __check_not_comparable(metric, ref_label, est_label):
-    ''' Checks that ref_label is not comparable to est_label by metric '''
+    """Checks that ref_label is not comparable to est_label by metric."""
     with warnings.catch_warnings(record=True) as w:
         warnings.simplefilter('always')
         # Try to produce the warning

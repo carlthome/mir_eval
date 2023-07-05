@@ -1,10 +1,9 @@
-'''
-unit tests for mir_eval.separation
+"""Unit tests for mir_eval.separation.
 
-load randomly generated source and estimated source signals and
-the output from BSS_eval MATLAB implementation, make sure the results
-from mir_eval numerically match.
-'''
+load randomly generated source and estimated source signals and the
+output from BSS_eval MATLAB implementation, make sure the results from
+mir_eval numerically match.
+"""
 
 import glob
 import json
@@ -24,8 +23,7 @@ SCORES_GLOB = 'data/separation/output*.json'
 
 
 def __load_and_stack_wavs(directory):
-    ''' Load all wavs in a directory and stack them vertically into a matrix
-    '''
+    """Load all wavs in a directory and stack them vertically into a matrix."""
     stacked_audio_data = []
     global_fs = None
     for f in sorted(glob.glob(os.path.join(directory, '*.wav'))):
@@ -37,10 +35,12 @@ def __load_and_stack_wavs(directory):
 
 
 def __generate_multichannel(mono_sig, nchan=2, gain=1.0, reverse=False):
-    ''' Turn a single channel (ie. mono) audio sample into a multichannel
+    """Turn a single channel (ie.
+
+    mono) audio sample into a multichannel
     (e.g. stereo)
     Note: to achieve channels of silence pass gain=0
-    '''
+    """
     # add the channels dimension
     input_3d = np.atleast_3d(mono_sig)
     # get the desired number of channels

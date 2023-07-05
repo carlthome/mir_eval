@@ -1,5 +1,5 @@
 # -*- encoding: utf-8 -*-
-'''Display functions'''
+"""Display functions."""
 
 from collections import defaultdict
 
@@ -15,7 +15,7 @@ from .util import hz_to_midi, midi_to_hz
 
 
 def __expand_limits(ax, limits, which='x'):
-    '''Helper function to expand axis limits'''
+    """Helper function to expand axis limits."""
 
     if which == 'x':
         getter, setter = ax.get_xlim, ax.set_xlim
@@ -38,7 +38,7 @@ def __expand_limits(ax, limits, which='x'):
 
 
 def __get_axes(ax=None, fig=None):
-    '''Get or construct the target axes object for a new plot.
+    """Get or construct the target axes object for a new plot.
 
     Parameters
     ----------
@@ -59,8 +59,7 @@ def __get_axes(ax=None, fig=None):
     new_axes : bool
         If `True`, the axis object was newly constructed.
         If `False`, the axis object already existed.
-
-    '''
+    """
 
     new_axes = False
 
@@ -79,7 +78,7 @@ def __get_axes(ax=None, fig=None):
 
 def segments(intervals, labels, base=None, height=None, text=False,
              text_kw=None, ax=None, **kwargs):
-    '''Plot a segmentation as a set of disjoint rectangles.
+    """Plot a segmentation as a set of disjoint rectangles.
 
     Parameters
     ----------
@@ -121,7 +120,7 @@ def segments(intervals, labels, base=None, height=None, text=False,
     -------
     ax : matplotlib.pyplot.axes._subplots.AxesSubplot
         A handle to the (possibly constructed) plot axes
-    '''
+    """
     if text_kw is None:
         text_kw = dict()
     text_kw.setdefault('va', 'top')
@@ -187,7 +186,7 @@ def segments(intervals, labels, base=None, height=None, text=False,
 def labeled_intervals(intervals, labels, label_set=None,
                       base=None, height=None, extend_labels=True,
                       ax=None, tick=True, **kwargs):
-    '''Plot labeled intervals with each label on its own row.
+    """Plot labeled intervals with each label on its own row.
 
     Parameters
     ----------
@@ -241,7 +240,7 @@ def labeled_intervals(intervals, labels, label_set=None,
     -------
     ax : matplotlib.pyplot.axes._subplots.AxesSubplot
         A handle to the (possibly constructed) plot axes
-    '''
+    """
 
     # Get the axes handle
     ax, _ = __get_axes(ax=ax)
@@ -319,7 +318,7 @@ def labeled_intervals(intervals, labels, label_set=None,
 
 
 class IntervalFormatter(Formatter):
-    '''Ticker formatter for labeled interval plots.
+    """Ticker formatter for labeled interval plots.
 
     Parameters
     ----------
@@ -328,7 +327,7 @@ class IntervalFormatter(Formatter):
 
     ticks : array-like of string
         The labels for the ticks
-    '''
+    """
     def __init__(self, base, ticks):
 
         self._map = {int(k): v for k, v in zip(base, ticks)}
@@ -339,7 +338,7 @@ class IntervalFormatter(Formatter):
 
 
 def hierarchy(intervals_hier, labels_hier, levels=None, ax=None, **kwargs):
-    '''Plot a hierarchical segmentation
+    """Plot a hierarchical segmentation.
 
     Parameters
     ----------
@@ -366,7 +365,7 @@ def hierarchy(intervals_hier, labels_hier, levels=None, ax=None, **kwargs):
     -------
     ax : matplotlib.pyplot.axes._subplots.AxesSubplot
         A handle to the (possibly constructed) plot axes
-    '''
+    """
 
     # This will break if a segment label exists in multiple levels
     if levels is None:
@@ -391,7 +390,7 @@ def hierarchy(intervals_hier, labels_hier, levels=None, ax=None, **kwargs):
 
 def events(times, labels=None, base=None, height=None, ax=None, text_kw=None,
            **kwargs):
-    '''Plot event times as a set of vertical lines
+    """Plot event times as a set of vertical lines.
 
     Parameters
     ----------
@@ -429,7 +428,7 @@ def events(times, labels=None, base=None, height=None, ax=None, text_kw=None,
     -------
     ax : matplotlib.pyplot.axes._subplots.AxesSubplot
         A handle to the (possibly constructed) plot axes
-    '''
+    """
     if text_kw is None:
         text_kw = dict()
     text_kw.setdefault('va', 'top')
@@ -489,7 +488,7 @@ def events(times, labels=None, base=None, height=None, ax=None, text_kw=None,
 
 
 def pitch(times, frequencies, midi=False, unvoiced=False, ax=None, **kwargs):
-    '''Visualize pitch contours
+    """Visualize pitch contours.
 
     Parameters
     ----------
@@ -522,7 +521,7 @@ def pitch(times, frequencies, midi=False, unvoiced=False, ax=None, **kwargs):
     -------
     ax : matplotlib.pyplot.axes._subplots.AxesSubplot
         A handle to the (possibly constructed) plot axes
-    '''
+    """
 
     ax, _ = __get_axes(ax=ax)
 
@@ -575,7 +574,7 @@ def pitch(times, frequencies, midi=False, unvoiced=False, ax=None, **kwargs):
 
 def multipitch(times, frequencies, midi=False, unvoiced=False, ax=None,
                **kwargs):
-    '''Visualize multiple f0 measurements
+    """Visualize multiple f0 measurements.
 
     Parameters
     ----------
@@ -611,7 +610,7 @@ def multipitch(times, frequencies, midi=False, unvoiced=False, ax=None,
     -------
     ax : matplotlib.pyplot.axes._subplots.AxesSubplot
         A handle to the (possibly constructed) plot axes
-    '''
+    """
 
     # Get the axes handle
     ax, _ = __get_axes(ax=ax)
@@ -666,7 +665,7 @@ def multipitch(times, frequencies, midi=False, unvoiced=False, ax=None,
 
 
 def piano_roll(intervals, pitches=None, midi=None, ax=None, **kwargs):
-    '''Plot a quantized piano roll as intervals
+    """Plot a quantized piano roll as intervals.
 
     Parameters
     ----------
@@ -692,7 +691,7 @@ def piano_roll(intervals, pitches=None, midi=None, ax=None, **kwargs):
     -------
     ax : matplotlib.pyplot.axes._subplots.AxesSubplot
         A handle to the (possibly constructed) plot axes
-    '''
+    """
 
     if midi is None:
         if pitches is None:
@@ -716,7 +715,7 @@ def piano_roll(intervals, pitches=None, midi=None, ax=None, **kwargs):
 
 
 def separation(sources, fs=22050, labels=None, alpha=0.75, ax=None, **kwargs):
-    '''Source-separation visualization
+    """Source-separation visualization.
 
     Parameters
     ----------
@@ -743,7 +742,7 @@ def separation(sources, fs=22050, labels=None, alpha=0.75, ax=None, **kwargs):
     -------
     ax
         The axis handle for this plot
-    '''
+    """
 
     # Get the axes handle
     ax, new_axes = __get_axes(ax=ax)
@@ -803,11 +802,11 @@ def separation(sources, fs=22050, labels=None, alpha=0.75, ax=None, **kwargs):
 
 
 def __ticker_midi_note(x, pos):
-    '''A ticker function for midi notes.
+    """A ticker function for midi notes.
 
-    Inputs x are interpreted as midi numbers, and converted
-    to [NOTE][OCTAVE]+[cents].
-    '''
+    Inputs x are interpreted as midi numbers, and converted to
+    [NOTE][OCTAVE]+[cents].
+    """
 
     NOTES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
 
@@ -826,25 +825,23 @@ def __ticker_midi_note(x, pos):
 
 
 def __ticker_midi_hz(x, pos):
-    '''A ticker function for midi pitches.
+    """A ticker function for midi pitches.
 
-    Inputs x are interpreted as midi numbers, and converted
-    to Hz.
-    '''
+    Inputs x are interpreted as midi numbers, and converted to Hz.
+    """
 
     return '{:g}'.format(midi_to_hz(x))
 
 
 def ticker_notes(ax=None):
-    '''Set the y-axis of the given axes to MIDI notes
+    """Set the y-axis of the given axes to MIDI notes.
 
     Parameters
     ----------
     ax : matplotlib.pyplot.axes
         The axes handle to apply the ticker.
         By default, uses the current axes handle.
-
-    '''
+    """
     ax, _ = __get_axes(ax=ax)
 
     ax.yaxis.set_major_formatter(FMT_MIDI_NOTE)
@@ -854,14 +851,14 @@ def ticker_notes(ax=None):
 
 
 def ticker_pitch(ax=None):
-    '''Set the y-axis of the given axes to MIDI frequencies
+    """Set the y-axis of the given axes to MIDI frequencies.
 
     Parameters
     ----------
     ax : matplotlib.pyplot.axes
         The axes handle to apply the ticker.
         By default, uses the current axes handle.
-    '''
+    """
     ax, _ = __get_axes(ax=ax)
 
     ax.yaxis.set_major_formatter(FMT_MIDI_HZ)

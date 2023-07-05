@@ -174,8 +174,8 @@ def validate_intervals(ref_intervals, est_intervals):
 
 def match_note_offsets(ref_intervals, est_intervals, offset_ratio=0.2,
                        offset_min_tolerance=0.05, strict=False):
-    """Compute a maximum matching between reference and estimated notes,
-    only taking note offsets into account.
+    """Compute a maximum matching between reference and estimated notes, only
+    taking note offsets into account.
 
     Given two note sequences represented by ``ref_intervals`` and
     ``est_intervals`` (see :func:`mir_eval.io.load_valued_intervals`), we seek
@@ -263,8 +263,8 @@ def match_note_offsets(ref_intervals, est_intervals, offset_ratio=0.2,
 
 def match_note_onsets(ref_intervals, est_intervals, onset_tolerance=0.05,
                       strict=False):
-    """Compute a maximum matching between reference and estimated notes,
-    only taking note onsets into account.
+    """Compute a maximum matching between reference and estimated notes, only
+    taking note onsets into account.
 
     Given two note sequences represented by ``ref_intervals`` and
     ``est_intervals`` (see :func:`mir_eval.io.load_valued_intervals`), we see
@@ -569,11 +569,11 @@ def precision_recall_f1_overlap(ref_intervals, ref_pitches, est_intervals,
 
 
 def average_overlap_ratio(ref_intervals, est_intervals, matching):
-    """Compute the Average Overlap Ratio between a reference and estimated
-    note transcription. Given a reference and corresponding estimated note,
-    their overlap ratio (OR) is defined as the ratio between the duration of
-    the time segment in which the two notes overlap and the time segment
-    spanned by the two notes combined (earliest onset to latest offset):
+    """Compute the Average Overlap Ratio between a reference and estimated note
+    transcription. Given a reference and corresponding estimated note, their
+    overlap ratio (OR) is defined as the ratio between the duration of the time
+    segment in which the two notes overlap and the time segment spanned by the
+    two notes combined (earliest onset to latest offset):
 
     >>> OR = ((min(ref_offset, est_offset) - max(ref_onset, est_onset)) /
     ...     (max(ref_offset, est_offset) - min(ref_onset, est_onset)))

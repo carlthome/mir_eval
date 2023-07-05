@@ -1,6 +1,6 @@
 # CREATED:2015-09-16 14:46:47 by Brian McFee <brian.mcfee@nyu.edu>
 # -*- encoding: utf-8 -*-
-'''Evaluation criteria for hierarchical structure analysis.
+"""Evaluation criteria for hierarchical structure analysis.
 
 Hierarchical structure analysis seeks to annotate a track with a nested
 decomposition of the temporal elements of the piece, effectively providing
@@ -39,7 +39,7 @@ References
     Juan P. Bello.
     "Evaluating hierarchical structure in music annotations",
     Frontiers in Psychology, 2017.
-'''
+"""
 
 import collections
 import itertools
@@ -53,7 +53,7 @@ from .segment import validate_structure
 
 
 def _round(t, frame_size):
-    '''Round a time-stamp to a specified resolution.
+    """Round a time-stamp to a specified resolution.
 
     Equivalent to ``t - np.mod(t, frame_size)``.
 
@@ -76,12 +76,12 @@ def _round(t, frame_size):
     -------
     t_round : number
         The rounded time-stamp
-    '''
+    """
     return t - np.mod(t, float(frame_size))
 
 
 def _hierarchy_bounds(intervals_hier):
-    '''Compute the covered time range of a hierarchical segmentation.
+    """Compute the covered time range of a hierarchical segmentation.
 
     Parameters
     ----------
@@ -94,14 +94,14 @@ def _hierarchy_bounds(intervals_hier):
     t_min : float
     t_max : float
         The minimum and maximum times spanned by the annotation
-    '''
+    """
     boundaries = list(itertools.chain(*list(itertools.chain(*intervals_hier))))
 
     return min(boundaries), max(boundaries)
 
 
 def _align_intervals(int_hier, lab_hier, t_min=0.0, t_max=None):
-    '''Align a hierarchical annotation to span a fixed start and end time.
+    """Align a hierarchical annotation to span a fixed start and end time.
 
     Parameters
     ----------
@@ -122,7 +122,7 @@ def _align_intervals(int_hier, lab_hier, t_min=0.0, t_max=None):
     intervals_hier : list of list of intervals
     labels_hier : list of list of str
         `int_hier` `lab_hier` aligned to span `[t_min, t_max]`.
-    '''
+    """
     return [list(_) for _ in zip(*[util.adjust_intervals(np.asarray(ival),
                                                          labels=lab,
                                                          t_min=t_min,
@@ -131,7 +131,7 @@ def _align_intervals(int_hier, lab_hier, t_min=0.0, t_max=None):
 
 
 def _lca(intervals_hier, frame_size):
-    '''Compute the (sparse) least-common-ancestor (LCA) matrix for a
+    """Compute the (sparse) least-common-ancestor (LCA) matrix for a
     hierarchical segmentation.
 
     For any pair of frames ``(s, t)``, the LCA is the deepest level in
@@ -152,7 +152,7 @@ def _lca(intervals_hier, frame_size):
     lca_matrix : scipy.sparse.csr_matrix
         A sparse matrix such that ``lca_matrix[i, j]`` contains the depth
         of the deepest segment containing frames ``i`` and ``j``.
-    '''
+    """
 
     frame_size = float(frame_size)
 
@@ -176,7 +176,7 @@ def _lca(intervals_hier, frame_size):
 
 
 def _meet(intervals_hier, labels_hier, frame_size):
-    '''Compute the (sparse) least-common-ancestor (LCA) matrix for a
+    """Compute the (sparse) least-common-ancestor (LCA) matrix for a
     hierarchical segmentation.
 
     For any pair of frames ``(s, t)``, the LCA is the deepest level in
@@ -201,7 +201,7 @@ def _meet(intervals_hier, labels_hier, frame_size):
     meet_matrix : scipy.sparse.csr_matrix
         A sparse matrix such that ``meet_matrix[i, j]`` contains the depth
         of the deepest segment label containing both ``i`` and ``j``.
-    '''
+    """
 
     frame_size = float(frame_size)
 
@@ -239,7 +239,7 @@ def _meet(intervals_hier, labels_hier, frame_size):
 
 
 def _gauc(ref_lca, est_lca, transitive, window):
-    '''Generalized area under the curve (GAUC)
+    """Generalized area under the curve (GAUC)
 
     This function computes the normalized recall score for correctly
     ordering triples ``(q, i, j)`` where frames ``(q, i)`` are closer than
@@ -273,7 +273,7 @@ def _gauc(ref_lca, est_lca, transitive, window):
     ------
     ValueError
         If ``ref_lca`` and ``est_lca`` have different shapes
-    '''
+    """
     # Make sure we have the right number of frames
 
     if ref_lca.shape != est_lca.shape:
@@ -368,7 +368,7 @@ def _count_inversions(a, b):
 
 
 def _compare_frame_rankings(ref, est, transitive=False):
-    '''Compute the number of ranking disagreements in two lists.
+    """Compute the number of ranking disagreements in two lists.
 
     Parameters
     ----------
@@ -391,7 +391,7 @@ def _compare_frame_rankings(ref, est, transitive=False):
         The total number of pairs (i, j) under consideration.
         If transitive=True, then this is |{(i,j) : ref[i] < ref[j]}|
         If transitive=False, then this is |{i,j) : ref[i] +1 = ref[j]}|
-    '''
+    """
 
     idx = np.argsort(ref)
     ref_sorted = ref[idx]
@@ -437,7 +437,7 @@ def _compare_frame_rankings(ref, est, transitive=False):
 
 
 def validate_hier_intervals(intervals_hier):
-    '''Validate a hierarchical segment annotation.
+    """Validate a hierarchical segment annotation.
 
     Parameters
     ----------
@@ -450,7 +450,7 @@ def validate_hier_intervals(intervals_hier):
         segmentation.
 
         If any segmentation does not start at 0.
-    '''
+    """
 
     # Synthesize a label array for the top layer.
     label_top = util.generate_labels(intervals_hier[0])
@@ -474,7 +474,7 @@ def validate_hier_intervals(intervals_hier):
 
 def tmeasure(reference_intervals_hier, estimated_intervals_hier,
              transitive=False, window=15.0, frame_size=0.1, beta=1.0):
-    '''Computes the tree measures for hierarchical segment annotations.
+    """Computes the tree measures for hierarchical segment annotations.
 
     Parameters
     ----------
@@ -520,7 +520,7 @@ def tmeasure(reference_intervals_hier, estimated_intervals_hier,
         If the input hierarchies have different time durations
 
         If ``frame_size > window`` or ``frame_size <= 0``
-    '''
+    """
 
     # Compute the number of frames in the window
     if frame_size <= 0:
@@ -556,7 +556,7 @@ def tmeasure(reference_intervals_hier, estimated_intervals_hier,
 def lmeasure(reference_intervals_hier, reference_labels_hier,
              estimated_intervals_hier, estimated_labels_hier,
              frame_size=0.1, beta=1.0):
-    '''Computes the tree measures for hierarchical segment annotations.
+    """Computes the tree measures for hierarchical segment annotations.
 
     Parameters
     ----------
@@ -601,7 +601,7 @@ def lmeasure(reference_intervals_hier, reference_labels_hier,
         If the input hierarchies have different time durations
 
         If ``frame_size > window`` or ``frame_size <= 0``
-    '''
+    """
 
     # Compute the number of frames in the window
     if frame_size <= 0:
@@ -629,7 +629,7 @@ def lmeasure(reference_intervals_hier, reference_labels_hier,
 
 def evaluate(ref_intervals_hier, ref_labels_hier,
              est_intervals_hier, est_labels_hier, **kwargs):
-    '''Compute all hierarchical structure metrics for the given reference and
+    """Compute all hierarchical structure metrics for the given reference and
     estimated annotations.
 
     Examples
@@ -704,7 +704,7 @@ def evaluate(ref_intervals_hier, ref_labels_hier,
     ------
     ValueError
         Thrown when the provided annotations are not valid.
-    '''
+    """
 
     # First, find the maximum length of the reference
     _, t_end = _hierarchy_bounds(ref_intervals_hier)

@@ -1,7 +1,5 @@
 # CREATED: 4/15/14 9:42 AM by Justin Salamon <justin.salamon@nyu.edu>
-'''
-Unit tests for mir_eval.melody
-'''
+"""Unit tests for mir_eval.melody."""
 
 import glob
 import json
