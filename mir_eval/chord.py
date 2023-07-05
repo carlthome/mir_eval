@@ -354,7 +354,6 @@ def validate_chord_label(chord_label):
     if not pattern.match(chord_label):
         raise InvalidChordException('Invalid chord label: '
                                     '{}'.format(chord_label))
-    pass
 
 
 def split(chord_label, reduce_extended_chords=False):
